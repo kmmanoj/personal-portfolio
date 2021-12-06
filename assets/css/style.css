@@ -9,7 +9,7 @@
 # General
 --------------------------------------------------------------*/
 body {
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Ubuntu', sans-serif;
   background-color: #040404;
   color: #fff;
   position: relative;
@@ -755,6 +755,7 @@ section .container {
   z-index: 9994;
 }
 .portfolio .portfolio-wrap .portfolio-info h4 {
+  padding: 0% 5%;
   font-size: 20px;
   color: #fff;
   font-weight: 600;
@@ -762,8 +763,8 @@ section .container {
 .portfolio .portfolio-wrap .portfolio-info p {
   color: #ffffff;
   font-size: 14px;
-  text-transform: uppercase;
-  padding: 0;
+  padding: 0% 5%;
+  /* text-transform: uppercase; */
   margin: 0;
 }
 .portfolio .portfolio-wrap .portfolio-links {

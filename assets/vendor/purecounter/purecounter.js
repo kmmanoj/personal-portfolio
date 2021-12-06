@@ -1,8 +1,247 @@
-/*!
- * purecounter.js - A simple yet configurable native javascript counter which you can count on.
- * Author: Stig Rex
- * Version: 1.1.4
- * Url: https://github.com/srexi/purecounterjs
- * License: MIT
- */!function(){"use strict";function e(e,t){var r=Object.keys(e);if(Object.getOwnPropertySymbols){var n=Object.getOwnPropertySymbols(e);t&&(n=n.filter((function(t){return Object.getOwnPropertyDescriptor(e,t).enumerable}))),r.push.apply(r,n)}return r}function t(e,t,r){return t in e?Object.defineProperty(e,t,{value:r,enumerable:!0,configurable:!0,writable:!0}):e[t]=r,e}function r(e,t){for(var r=0;r<t.length;r++){var n=t[r];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}new(function(){function n(e){!function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this,n),this.defaults={start:0,end:100,duration:2e3,delay:10,once:!0,decimals:0,legacy:!0,currency:!1,currencysymbol:!1,separator:!1,separatorsymbol:",",selector:".purecounter"},this.configOptions=Object.assign({},this.defaults,e||{}),this.registerEventListeners()}var a,i,o;return a=n,(i=[{key:"registerEventListeners",value:function(){var e=document.querySelectorAll(this.configOptions.selector);if(this.intersectionListenerSupported()){var t=new IntersectionObserver(this.animateElements.bind(this),{root:null,rootMargin:"20px",threshold:.5});e.forEach((function(e){t.observe(e)}))}else window.addEventListener&&(this.animateLegacy(e),window.addEventListener("scroll",(function(t){this.animateLegacy(e)}),{passive:!0}))}},{key:"animateLegacy",value:function(e){var t=this;e.forEach((function(e){!0===t.parseConfig(e).legacy&&t.elementIsInView(e)&&t.animateElements([e])}))}},{key:"animateElements",value:function(e,t){var r=this;e.forEach((function(e){var n=e.target||e,a=r.parseConfig(n);if(a.duration<=0)return n.innerHTML=r.formatNumber(a.end,a);if(!t&&!r.elementIsInView(e)||t&&e.intersectionRatio<.5){var i=a.start>a.end?a.end:a.start;return n.innerHTML=r.formatNumber(i,a)}setTimeout((function(){return r.startCounter(n,a)}),a.delay)}))}},{key:"startCounter",value:function(e,t){var r=this,n=(t.end-t.start)/(t.duration/t.delay),a="inc";t.start>t.end&&(a="dec",n*=-1);var i=this.parseValue(t.start);e.innerHTML=this.formatNumber(i,t),!0===t.once&&e.setAttribute("data-purecounter-duration",0);var o=setInterval((function(){var s=r.nextNumber(i,n,a);e.innerHTML=r.formatNumber(s,t),((i=s)>=t.end&&"inc"==a||i<=t.end&&"dec"==a)&&(e.innerHTML=r.formatNumber(t.end,t),clearInterval(o))}),t.delay)}},{key:"parseConfig",value:function(r){var n=this,a=function(r){for(var n=1;n<arguments.length;n++){var a=null!=arguments[n]?arguments[n]:{};n%2?e(Object(a),!0).forEach((function(e){t(r,e,a[e])})):Object.getOwnPropertyDescriptors?Object.defineProperties(r,Object.getOwnPropertyDescriptors(a)):e(Object(a)).forEach((function(e){Object.defineProperty(r,e,Object.getOwnPropertyDescriptor(a,e))}))}return r}({},this.configOptions),i=[].filter.call(r.attributes,(function(e){return/^data-purecounter-/.test(e.name)})),o={};return i.forEach((function(e){var t=e.name.replace("data-purecounter-","").toLowerCase(),r="duration"==t?parseInt(1e3*n.parseValue(e.value)):n.parseValue(e.value);o[t]=r})),Object.assign(a,o)}},{key:"nextNumber",value:function(e,t){var r=arguments.length>2&&void 0!==arguments[2]?arguments[2]:"inc";return e=this.parseValue(e),t=this.parseValue(t),parseFloat("inc"===r?e+t:e-t)}},{key:"convertToCurrencySystem",value:function(e,t){var r=t.currencysymbol||"",n=t.decimals||1;return r+((e=Math.abs(Number(e)))>=1e12?"".concat((e/1e12).toFixed(n)," T"):e>=1e9?"".concat((e/1e9).toFixed(n)," B"):e>=1e6?"".concat((e/1e6).toFixed(n)," M"):e>=1e3?"".concat((e/1e12).toFixed(n)," K"):e.toFixed(n))}},{key:"applySeparator",value:function(e,t){return t.separator?e.replace(/(\d)(?=(\d{3})+(?!\d))/g,"$1,").replace(new RegExp(/,/gi,"gi"),t.separatorsymbol):e.replace(new RegExp(/,/gi,"gi"),"")}},{key:"formatNumber",value:function(e,t){var r={minimumFractionDigits:t.decimals,maximumFractionDigits:t.decimals};return e=t.currency?this.convertToCurrencySystem(e,t):parseFloat(e),this.applySeparator(e.toLocaleString(void 0,r),t)}},{key:"parseValue",value:function(e){return/^[0-9]+\.[0-9]+$/.test(e)?parseFloat(e):/^[0-9]+$/.test(e)?parseInt(e):/^true|false/i.test(e)?/^true/i.test(e):e}},{key:"elementIsInView",value:function(e){for(var t=e.offsetTop,r=e.offsetLeft,n=e.offsetWidth,a=e.offsetHeight;e.offsetParent;)t+=(e=e.offsetParent).offsetTop,r+=e.offsetLeft;return t>=window.pageYOffset&&r>=window.pageXOffset&&t+a<=window.pageYOffset+window.innerHeight&&r+n<=window.pageXOffset+window.innerWidth}},{key:"intersectionListenerSupported",value:function(){return"IntersectionObserver"in window&&"IntersectionObserverEntry"in window&&"intersectionRatio"in window.IntersectionObserverEntry.prototype}}])&&r(a.prototype,i),o&&r(a,o),n}())}();
-//# sourceMappingURL=purecounter.js.map
+/** Initial function */
+function registerEventListeners() {
+    /** Get all elements with class 'purecounter' */
+    var elements = document.querySelectorAll('.purecounter');
+    /** Get browser Intersection Listener Support */
+    var intersectionSupported = intersectionListenerSupported();
+
+    /** Run animateElements base on Intersection Support */
+    if (intersectionSupported) {
+        var intersectObserver = new IntersectionObserver(animateElements, {
+            "root": null,
+            "rootMargin": '20px',
+            "threshold": 0.5
+        });
+
+        elements.forEach(element => {intersectObserver.observe(element);})
+    } else {
+        if (window.addEventListener) {
+            animateLegacy(elements);
+
+            window.addEventListener('scroll', function(e) {
+                animateLegacy(elements);
+            }, { "passive": true });
+        }
+    }
+}
+
+/** This legacy to make Purecounter use very lightweight & fast */
+function animateLegacy(elements) {
+    elements.forEach(element => {
+        var config = parseConfig(element);
+        if(config.legacy === true && elementIsInView(element)) {
+            animateElements([element]);
+        }
+    })
+}
+
+/** Main Element Count Animation */
+function animateElements(elements, observer) {
+    elements.forEach(element => {
+        var elm = element.target || element; // Just make sure which element will be used
+        var elementConfig = parseConfig(elm); // Get config value on that element
+
+        // If duration is less than or equal zero, just format the 'end' value
+        if (elementConfig.duration <= 0) {
+            return elm.innerHTML = formatNumber(elementConfig.end, elementConfig);
+        }
+
+        if ((!observer && !elementIsInView(element)) || (observer && element.intersectionRatio < 0.5)) {
+            var value = elementConfig.start > elementConfig.end ? elementConfig.end : elementConfig.start;
+            return elm.innerHTML = formatNumber(value, elementConfig);
+        }
+
+        // If duration is more than 0, then start the counter
+        setTimeout(() => {
+            return startCounter(elm, elementConfig);
+        }, elementConfig.delay);
+    });
+}
+
+/** This is the the counter method */
+function startCounter(element, config) {
+    // First, get the increments step
+    var incrementsPerStep = (config.end - config.start) / (config.duration / config.delay);
+    // Next, set the counter mode (Increment or Decrement)
+    var countMode = 'inc';
+
+    // Set mode to 'decrement' and 'increment step' to minus if start is larger than end
+    if (config.start > config.end) {
+        countMode = 'dec';
+        incrementsPerStep *= -1;
+    }
+
+    // Next, determine the starting value
+    var currentCount = parseValue(config.start);
+    // And then print it's value to the page
+    let midConfig = {...config};
+    if(!config.showtrailer) midConfig.trailer = '';
+    element.innerHTML = formatNumber(currentCount, midConfig);
+
+    // If the config 'once' is true, then set the 'duration' to 0
+    if(config.once === true){
+        element.setAttribute('data-purecounter-duration', 0);
+    }
+
+    // Now, start counting with counterWorker using Interval method based on delay
+    var counterWorker = setInterval(() => {
+        // First, determine the next value base on current value, increment value, and count mode
+        var nextNum = nextNumber(currentCount, incrementsPerStep, countMode);
+        // Next, print that value to the page
+        let midConfig = {...config};
+        if(!config.showtrailer) midConfig.trailer = '';
+        if(currentCount < 1.0e3) midConfig.decimals = 0;
+
+        element.innerHTML = formatNumber(currentCount, midConfig);
+        // Now set that value to the current value, because it's already printed
+        currentCount = nextNum;
+
+        // If the value is larger or less than the 'end' (base on mode), then  print the end value and stop the Interval
+        if ((currentCount >= config.end && countMode == 'inc') || (currentCount <= config.end && countMode == 'dec')) {
+            element.innerHTML = formatNumber(config.end, config);
+            clearInterval(counterWorker);
+        }
+    }, config.delay);
+}
+
+/** This function is to generate the element Config */
+function parseConfig(element) {
+    // First, we need to declare the base Config
+    // This config will be used if the element doesn't have config
+    var baseConfig = {
+        start: 0,
+        end: 9001,
+        duration: 2000,
+        delay: 10,
+        once: true,
+        decimals: 0,
+        legacy: true,
+        currency: false,
+        currencysymbol: false,
+        trailer: false,
+        showtrailer: true,
+        separator: false,
+        separatorsymbol: ','
+    };
+
+    // Next, get all 'data-precounter' attributes value. Store to array
+    var configValues = [].filter.call(element.attributes, function(attr) {
+        return /^data-purecounter-/.test(attr.name);
+    });
+
+    // Now, we create element config as an empty object
+    var elementConfig = {};
+
+    // And then, fill the element config based on config values
+    configValues.forEach(e => {
+        var name = e.name.replace('data-purecounter-', '').toLowerCase();
+        var value = name == 'duration' ? parseInt(parseValue(e.value) * 1000) : parseValue(e.value);
+        elementConfig[name] = value; // We will get an object
+    })
+
+    // Last marge base config with element config and return it as an object
+    return Object.assign(baseConfig, elementConfig);
+}
+
+/** This function is to get the next number */
+function nextNumber(number, steps, mode = 'inc') {
+    // First, get the exact value from the number and step (int or float)
+    number = parseValue(number);
+    steps = parseValue(steps);
+
+    // Last, get the next number based on current number, increment step, and count mode
+    // Always return it as float
+    return parseFloat(mode === 'inc' ? (number + steps) : (number - steps));
+}
+
+/** This function is to convert number into currency format */
+function convertToCurrencySystem (number, config) {
+    var symbol = config.currencysymbol || "", // Set the Currency Symbol (if any)
+        trailer = config.trailer || "",
+        limit = config.decimals,  // Set the decimal limit (default is 1)
+        number = Math.abs(Number(number)); // Get the absolute value of number
+
+    // Set the value
+    var value = number >= 1.0e+12 ? `${(number / 1.0e+12).toFixed(limit)} T` // Twelve zeros for Trillions
+        : number >= 1.0e+9 ? `${(number / 1.0e+9).toFixed(limit)} B` // Nine zeros for Billions
+        : number >= 1.0e+6 ? `${(number / 1.0e+6).toFixed(limit)} M`  // Six zeros for Millions
+        : number >= 1.0e+3 ? `${(number / 1.0e+3).toFixed(limit)} K` // Three zeros for Thousands
+        : number.toFixed(limit); // If less than 1000, print it's value
+
+    // Apply symbol before the value and return it as string
+    return symbol + value + trailer;
+}
+
+/** This function is to get the last formated number */
+function applySeparator(value, config){
+    // If config separator is false, delete all separator
+    if (!config.separator) {
+        return value.replace(new RegExp(/,/gi, 'gi'), '')
+    }
+
+    // If config separator is true, then create separator
+    return value.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+        .replace(new RegExp(/,/gi, 'gi'), config.separatorsymbol)
+}
+
+/** This function is to get formated number to be printed in the page */
+function formatNumber(number, config) {
+    // This is the configuration for 'toLocaleString' method
+    var strConfig = {minimumFractionDigits: config.decimals, maximumFractionDigits: config.decimals};
+    // Set the number if it using currency, then convert. If doesn't, just parse it as float
+    number = config.currency ? convertToCurrencySystem(number, config) : parseFloat(number);
+
+    // Last, apply the number separator using number as string
+    return applySeparator(number.toLocaleString(undefined, strConfig), config);
+}
+
+/** This function is to get the parsed value */
+function parseValue(data) {
+    // If number with dot (.), will be parsed as float
+    if (/^[0-9]+\.[0-9]+$/.test(data)) {
+        return parseFloat(data);
+    }
+    // If just number, will be parsed as integer
+    if (/^[0-9]+$/.test(data)) {
+        return parseInt(data);
+    }
+    // If it's boolean string, will be parsed as boolean
+    if (/^true|false/i.test(data)) {
+        return /^true/i.test(data);
+    }
+    // Return it's value as default
+    return data;
+}
+
+// This function is to detect the element is in view or not.
+function elementIsInView(element) {
+    var top = element.offsetTop;
+    var left = element.offsetLeft;
+    var width = element.offsetWidth;
+    var height = element.offsetHeight;
+
+    while (element.offsetParent) {
+        element = element.offsetParent;
+        top += element.offsetTop;
+        left += element.offsetLeft;
+    }
+
+    return (
+        top >= window.pageYOffset &&
+        left >= window.pageXOffset &&
+        (top + height) <= (window.pageYOffset + window.innerHeight) &&
+        (left + width) <= (window.pageXOffset + window.innerWidth)
+    );
+}
+
+/** Just some condition to check browser Intersection Support */
+function intersectionListenerSupported() {
+    return ('IntersectionObserver' in window) &&
+        ('IntersectionObserverEntry' in window) &&
+        ('intersectionRatio' in window.IntersectionObserverEntry.prototype);
+}
+
+/** Run the initial function */
+(function () {
+    registerEventListeners();
+})();
