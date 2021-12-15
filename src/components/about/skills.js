@@ -1,12 +1,15 @@
 import React from "react"
 import ProgressBar from "@ramonak/react-progress-bar"
+import Zoom from 'react-reveal/Zoom'
 
 const Skill = (props) => {
     return (
-        <div className="w-full">
-            <p className="text-white uppercase text-sm">{props.skill}</p>
-            <ProgressBar completed={props.value} animateOnRender={true} bgColor="#18d26e" baseBgColor="#555" isLabelVisible={false} height="10px" borderRadius={0} />
-        </div>
+        <Zoom>
+            <div className="w-full">
+                <p className="text-white uppercase text-sm">{props.skill}</p>
+                <ProgressBar completed={props.value} animateOnRender={true} bgColor="#18d26e" baseBgColor="#555" isLabelVisible={false} height="10px" borderRadius={0} />
+            </div>
+        </Zoom>
     )
 }
 

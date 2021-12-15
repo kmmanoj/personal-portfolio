@@ -18,7 +18,7 @@ const AboutPage = () => {
                 <h1 className="follow-line my-5 border-b-2 w-2/12 border-primary text-gray-400">
                     <span className="bg-black px-1 uppercase">About</span>
                 </h1> 
-                <h1 className="text-white text-4xl uppercase">More stuff</h1>
+                <h1 className="text-white text-4xl uppercase">Hi there</h1>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-16 justify-items-center">
                     <Fade bottom cascade distance="100px">
                         <div className="col-span-1">

@@ -27,7 +27,7 @@ const Stat = (props) => {
 
 const Stats = () => {
     return (
-        <div className="grid grid-cols-4 gap-0 justify-items-center">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-0 justify-items-center">
             <Stat 
                 svg={<svg className="h-8 w-8"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  strokeWidth="2"  stroke-linecap="round"  strokeLinejoin="round">  
                         <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />  

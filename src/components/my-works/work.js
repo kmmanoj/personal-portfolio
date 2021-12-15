@@ -7,7 +7,6 @@ import 'react-vertical-timeline-component/style.min.css';
 
 class Works extends React.Component {
     render() {
-        console.log(work_list);
         return (
             <div className="bg-black">
                 <VerticalTimeline className="font-poppins">

@@ -11,7 +11,7 @@ return (
         <div className="flex items-center justify-between h-16">
         <Fade top cascade>
             <div className="w-full justify-between flex items-center">
-                <a className="text-white text-4xl flex-shrink-0 font-poppins" href="/">
+                <a className="text-white text-2xl md:text-4xl flex-shrink-0 font-poppins" href="/">
                 Manoj Vignesh K M
                 </a>
                 <div className="hidden md:block">
