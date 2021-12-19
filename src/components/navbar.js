@@ -11,31 +11,31 @@ return (
         <div className="flex items-center justify-between h-16">
         <Fade top cascade>
             <div className="w-full justify-between flex items-center">
-                <a className="text-white text-2xl md:text-4xl flex-shrink-0 font-poppins" href="/">
+                <a className="text-white text-2xl md:text-4xl flex-shrink-0" href="/">
                 Manoj Vignesh K M
                 </a>
                 <div className="hidden md:block">
                     <div className="ml-10 flex items-baseline space-x-4">
                         <Link
-                            className={"text-white py-2 text-base font-medium font-poppins " + (active==="home"?"link-underline-active":"link-underline")}
+                            className={"text-white py-2 text-base font-medium " + (active==="home"?"link-underline-active":"link-underline")}
                             to="/"
                             >
                             Home
                         </Link>
                         <Link
-                            className={"text-white py-2 text-base font-medium font-poppins " + (active==="about"?"link-underline-active":"link-underline")}
+                            className={"text-white py-2 text-base font-medium " + (active==="about"?"link-underline-active":"link-underline")}
                             to="/about"
                             >
                             About
                         </Link>
                         <Link
-                            className={"text-white py-2 text-base font-medium font-poppins " + (active==="resume"?"link-underline-active":"link-underline")}
+                            className={"text-white py-2 text-base font-medium " + (active==="resume"?"link-underline-active":"link-underline")}
                             to="/resume"
                             >
                             Resume
                         </Link>
                         <Link
-                            className={"text-white py-2 text-base font-medium font-poppins " + (active==="my-works"?"link-underline-active":"link-underline")}
+                            className={"text-white py-2 text-base font-medium " + (active==="my-works"?"link-underline-active":"link-underline")}
                             to="/my-works"
                             >
                             My Works
@@ -67,25 +67,25 @@ return (
         <div className="md:hidden">
         <div className="md-px-2 pt-2 pb-3 space-y-1 flex flex-col sm:px-3">
             <Link
-            className={"text-white mx-3 py-2 w-2/12 text-base font-medium font-poppins " + (active==="home"?"link-underline-active":"link-underline")}
+            className={"text-white mx-3 py-2 w-2/12 text-base font-medium " + (active==="home"?"link-underline-active":"link-underline")}
             to="/"
             >
             Home
             </Link>
             <Link
-            className={"text-white mx-3 py-2 w-2/12 text-base font-medium font-poppins " + (active==="about"?"link-underline-active":"link-underline")}
+            className={"text-white mx-3 py-2 w-2/12 text-base font-medium " + (active==="about"?"link-underline-active":"link-underline")}
             to="/about"
             >
             About
             </Link>
             <Link
-            className={"text-white mx-3 py-2 w-2/12 text-base font-medium font-poppins " + (active==="resume"?"link-underline-active":"link-underline")}
+            className={"text-white mx-3 py-2 w-2/12 text-base font-medium " + (active==="resume"?"link-underline-active":"link-underline")}
             to="/resume"
             >
             Resume
             </Link>
             <Link
-            className={"text-white mx-3 py-2 w-4/12 text-base font-medium font-poppins " + (active==="my-works"?"link-underline-active":"link-underline")}
+            className={"text-white mx-3 py-2 w-4/12 text-base font-medium " + (active==="my-works"?"link-underline-active":"link-underline")}
             to="/my-works"
             >
             My Works

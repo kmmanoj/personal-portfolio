@@ -9,7 +9,7 @@ class Works extends React.Component {
     render() {
         return (
             <div className="bg-black">
-                <VerticalTimeline className="font-poppins">
+                <VerticalTimeline>
                     {work_list.map((element) => {
                         return (
                             <VerticalTimelineElement

@@ -6,7 +6,7 @@ import { MdWorkOutline, MdOutlineSchool } from "react-icons/md"
 const Timeline = () => {
     return (
         <div className="bg-black">
-            <VerticalTimeline className="font-poppins">
+            <VerticalTimeline>
                 <VerticalTimelineElement
                     className="vertical-timeline-element--work"
                     contentStyle={{ background: '#111', color: '#fff', borderBottom: "0px" }}
