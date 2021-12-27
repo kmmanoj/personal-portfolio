@@ -1,5 +1,12 @@
 const work_list = [
     {
+        "title": "Introduction to API Security",
+        "date": "Dec 2021",
+        "description": "Learn what is API security and how Postman can be used in automatic security testing of APIs",
+        "url": "https://youtu.be/XlOEq9CBlr8",
+        "icon": "video"
+    },
+    {
         "title": "Man-in-the-middle: A tale of a hoax DHCP server",
         "date": "Dec 2021",
         "description": "Learn how a user can act like a hoax DHCP server and situate himself as a man in the middle, and how one can prevent such attacks",
@@ -11,7 +18,7 @@ const work_list = [
         "date": "Sep 2021",
         "description": "Learn API security testing in action using Postman",
         "url": "https://www.youtube.com/watch?v=shT-Obfo-uk",
-        "icon": "blog"
+        "icon": "video"
     },
     {
         "title": "Modelling Trust Frameworks for Network-IDS",

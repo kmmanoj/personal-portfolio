@@ -1,12 +1,20 @@
 import React from "react"
 import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timeline-component';
-import { FaPenNib, FaBook } from "react-icons/fa"
+import { FaPenNib, FaBook, FaYoutube } from "react-icons/fa"
 import work_list from "./work-list";
 
 import 'react-vertical-timeline-component/style.min.css';
 
 class Works extends React.Component {
     render() {
+        let get_icon = (element) => {
+            if(element.icon === "blog") {
+                return <FaPenNib />;
+            } else if(element.icon === "video") {
+                return <FaYoutube />;
+            }
+            return <FaBook />;
+        }
         return (
             <div className="bg-black">
                 <VerticalTimeline>
@@ -18,7 +26,7 @@ class Works extends React.Component {
                                 contentArrowStyle={{ borderRight: '7px solid #111' }}
                                 date={element.date}
                                 iconStyle={{ background: '#18d26e', color: '#fff' }}
-                                icon={element.icon === "blog"?<FaPenNib />:<FaBook />}
+                                icon={get_icon(element)}
                             >
                                 <h3 className="vertical-timeline-element-title text-2xl">{element.title}</h3>
                                 <p>{element.description}</p>
