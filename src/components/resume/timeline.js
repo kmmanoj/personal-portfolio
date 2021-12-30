@@ -19,8 +19,9 @@ const Timeline = () => {
                     <h3 className="vertical-timeline-element-title text-lg">Postman</h3>
                     <h4 className="vertical-timeline-element-subtitle text-sm">Bengaluru, KA, IN</h4>
                     <p className="text-base">
-                        <li>Building systems for monitoring and detection</li>
-                        <li>Building systems for security regression testing web applications</li>
+                        <li>Building custom security controls for Postman's cloud infrastructure</li>
+                        <li>Threat modelling cloud and web applications</li>
+                        <li>Building systems for automated security regression testing</li>
                         <li>Vulnerability assessment and Penetration testing</li>
                         <li>Incident response</li>
                     </p>
@@ -87,7 +88,7 @@ const Timeline = () => {
                 <h3 className="vertical-timeline-element-title text-lg">PES Institute of Technology</h3>
                 <h4 className="vertical-timeline-element-subtitle text-sm">Bengaluru, KA, IN</h4>
                 <p className="text-base">
-                    Gold medalist
+                    Gold medalist with a cumulative score of 9.69/10 and rank 5
                 </p>
                 </VerticalTimelineElement>
                 <VerticalTimelineElement
@@ -121,14 +122,11 @@ const Timeline = () => {
                     </p>
                 </VerticalTimelineElement>
             </VerticalTimeline>
-            {/* <div class="grid grid-cols-2 gap-10 text-center">
-                <a className="w-full p-5 mt-5 mb-20 bg-primary rounded-full text-black text-2xl" href="#">
-                    Download resume
-                </a>
-                <a className="w-full p-5 mt-5 mb-20 bg-primary rounded-full text-black text-2xl" href="#">
+            <div class="grid gap-10 text-center">
+                <a className="w-full p-5 mt-5 mb-20 bg-primary rounded-full text-black text-2xl" href="/CV.pdf">
                     Download CV
                 </a>
-            </div> */}
+            </div>
         </div>
     )
 }
