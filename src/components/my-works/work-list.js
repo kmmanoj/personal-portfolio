@@ -1,5 +1,12 @@
 const work_list = [
     {
+        "title": "How complex can authorization get?",
+        "date": "Mar 2022",
+        "description": "Builds on the Authorization component of Identity and Access Management system from zero to how systems are implemented today",
+        "url": "https://blog.kmmanoj.me/how-complex-can-authorization-get-5011c9dfb0fa",
+        "icon": "blog"
+    },
+    {
         "title": "Introduction to API Security",
         "date": "Dec 2021",
         "description": "Learn what is API security and how Postman can be used in automatic security testing of APIs",
