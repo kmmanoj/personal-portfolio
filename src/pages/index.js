@@ -17,7 +17,7 @@ const IndexPage = () => {
                 <Fade bottom cascade>
                     <div className="max-w-7xl mx-auto flex flex-col h-screen justify-center">
                         <div className="text-white m-2 md:m-0 text-7xl font-bold">Manoj Vignesh K M</div>
-                        <div className="text-white m-2 md:m-0 text-2xl py-5">I'm an ambitious <span className="highlighted pb-1">cybersecurity engineer</span> with a keen interest in automation.</div>
+                        <div className="text-white m-2 md:m-0 text-2xl py-5 pl-10">an ambitious <span className="highlighted pb-1">cybersecurity engineer</span> with a keen interest in <span className="highlighted pb-1">hyper</span>automation.</div>
                         <div className="flex items-baseline mx-4 md:mx-0 md:space-x-10 flex-col md:flex-row">
                             <Link
                                 className={"text-white py-2 text-base font-medium " + (active==="home"?"link-underline-active":"link-underline")}

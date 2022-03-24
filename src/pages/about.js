@@ -6,6 +6,7 @@ import Stats from "../components/about/stats";
 import Skills from "../components/about/skills";
 import Interests from "../components/about/interests";
 import { Helmet } from "react-helmet";
+import { Link } from 'gatsby';
 
 const AboutPage = () => {
     return (
@@ -27,8 +28,11 @@ const AboutPage = () => {
                         </div>
                         <div className="col-span-2 text-white w-full p-10">
                             <p className="text-primary text-3xl my-2">A Cybersecurity engineer</p>
-                            <p className="italic text-lg"> who believes in contributing to the world's cybersecurity needs with security hyperautomation </p>
-                            <p className="text-lg mt-5"> A curious and an organized security and software engineer with immense experience in building monitoring and detection systems for on-premise infrastructure and cloud, and developing security testing tools and systems. </p>
+                            <p className="italic text-lg"> who believes in contributing to the world's cybersecurity needs with security hyperautomation <Link className="text-sm text-primary link-underline-active pb-1" to="https://blog.kmmanoj.me/a-note-on-how-viable-is-security-hyperautomation-c951a0d6db37">How?</Link></p> 
+                            <p className="text-lg mt-5">
+                                A highly organized security and software engineer with diverse experience ranging from designing and developing production grade software system to reviewing and testing software systems from security lens.   
+                            </p>
+                            
                             <div className="mt-5 text-lg leading-loose">
                                 <div className="flex flex-col">
                                     <li><b>Currently:</b> Security Engineer at <a href="https://postman.com">Postman</a></li>
