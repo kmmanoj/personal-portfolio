@@ -1,9 +1,16 @@
 const work_list = [
     {
+        "title": "Threat of Offensive AI to organizations",
+        "date": "Apr 2022",
+        "description": "A research summary that describes ways that an adversary can use AI to enhance cyber attacks",
+        "url": "https://blog.kmmanoj.me/threat-of-offensive-ai-to-organizations-ed9533ca60b7",
+        "icon": "blog"
+    },
+    {
         "title": "How complex can authorization get?",
         "date": "Mar 2022",
         "description": "Builds on the Authorization component of Identity and Access Management system from zero to how systems are implemented today",
-        "url": "https://blog.kmmanoj.me/how-complex-can-authorization-get-5011c9dfb0fa",
+        "url": "https://medium.com/better-practices/how-complex-can-authorization-get-5011c9dfb0fa",
         "icon": "blog"
     },
     {
