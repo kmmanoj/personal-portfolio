@@ -6,7 +6,7 @@ const Navbar = (props) => {
 const [openMenu, setOpenMenu] = useState(false)
 let active = props.active;
 return (
-    <nav className="bg-transparent">
+    <nav className="bg-black opacity-90 sticky top-0 z-50">
     <div className="max-w-7xl mx-auto px-8 py-5">
         <div className="flex items-center justify-between h-16">
         <Fade top cascade>

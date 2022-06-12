@@ -38,7 +38,7 @@ const Timeline = () => {
                 <h3 className="vertical-timeline-element-title text-lg">Georgia Institute of Technology</h3>
                 <h4 className="vertical-timeline-element-subtitle text-sm">Atlanta, GA, US</h4>
                 <p className="text-base">
-                    Specializing in Computing and Machine Learning
+                    Specializing in Computing Systems
                 </p>
                 </VerticalTimelineElement>
                 <VerticalTimelineElement

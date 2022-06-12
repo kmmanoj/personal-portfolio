@@ -20,9 +20,6 @@ const Stat = (props) => {
                 <p className="text-base text-gray-300">
                     {props.text}
                 </p>
-                {/* <a href="https://google.com" className="bg-primary rounded-full px-3 py-1 mt-1 text-black">
-                    Talk to me to learn how
-                </a> */}
             </div>
         </Fade>
     );
@@ -36,8 +33,8 @@ const Stats = () => {
                         <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />  
                         <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
                     </svg>}
-                count={3}
-                suffix="+"
+                count={4}
+                suffix=""
                 text="Years of experience"
             />
             <Stat 
@@ -47,7 +44,7 @@ const Stats = () => {
                 count={200}
                 suffix="K USD per year"
                 moreClasses="col-span-2"
-                text="Aggregate business expense saved"
+                text="Best aggregate business expense saved"
             />
             <Stat 
                 svg={<svg className="h-8 w-8 text-red-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
