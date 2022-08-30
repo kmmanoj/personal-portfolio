@@ -8,25 +8,6 @@ const Timeline = () => {
         <div className="bg-black">
             <VerticalTimeline>
                 <VerticalTimelineElement
-                    className="vertical-timeline-element--work"
-                    contentStyle={{ background: '#111', color: '#fff', borderBottom: "0px" }}
-                    contentArrowStyle={{ borderRight: '7px solid #111' }}
-                    date="Aug 2021 - Present"
-                    iconStyle={{ background: '#18d26e', color: '#fff' }}
-                    icon={<MdWorkOutline />}
-                >
-                    <h3 className="vertical-timeline-element-title text-2xl font-bold">Security Engineer</h3>
-                    <h3 className="vertical-timeline-element-title text-lg">Postman</h3>
-                    <h4 className="vertical-timeline-element-subtitle text-sm">Bengaluru, KA, IN</h4>
-                    <p className="text-base">
-                        <li>Building custom security controls for Postman's cloud infrastructure</li>
-                        <li>Threat modelling cloud and web applications</li>
-                        <li>Building systems for automated security regression testing</li>
-                        <li>Vulnerability assessment and Penetration testing</li>
-                        <li>Incident response</li>
-                    </p>
-                </VerticalTimelineElement>
-                <VerticalTimelineElement
                     className="vertical-timeline-element--education"
                     contentStyle={{ background: '#111', color: '#fff', borderBottom: "0px" }}
                     contentArrowStyle={{ borderRight: '7px solid #111' }}
@@ -40,6 +21,25 @@ const Timeline = () => {
                 <p className="text-base">
                     Specializing in Computing Systems
                 </p>
+                </VerticalTimelineElement>
+                <VerticalTimelineElement
+                    className="vertical-timeline-element--work"
+                    contentStyle={{ background: '#111', color: '#fff', borderBottom: "0px" }}
+                    contentArrowStyle={{ borderRight: '7px solid #111' }}
+                    date="Aug 2021 - Aug 2022"
+                    iconStyle={{ background: '#18d26e', color: '#fff' }}
+                    icon={<MdWorkOutline />}
+                >
+                    <h3 className="vertical-timeline-element-title text-2xl font-bold">Security Engineer</h3>
+                    <h3 className="vertical-timeline-element-title text-lg">Postman</h3>
+                    <h4 className="vertical-timeline-element-subtitle text-sm">Bengaluru, KA, IN</h4>
+                    <p className="text-base">
+                        <li>Building custom security controls for Postman's cloud infrastructure</li>
+                        <li>Threat modelling cloud and web applications</li>
+                        <li>Building systems for automated security regression testing</li>
+                        <li>Vulnerability assessment and Penetration testing</li>
+                        <li>Incident response</li>
+                    </p>
                 </VerticalTimelineElement>
                 <VerticalTimelineElement
                     className="vertical-timeline-element--work"
