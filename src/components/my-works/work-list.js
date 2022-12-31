@@ -1,5 +1,12 @@
 const work_list = [
     {
+        "title": "What can go wrong in a cryptographic system?",
+        "date": "Oct 2022",
+        "description": "What parameters one should consider while building a cryptographic system?",
+        "url": "https://medium.com/@kmmanoj/what-can-go-wrong-in-a-cryptographic-system-4a60f47a2287",
+        "icon": "blog"
+    },
+    {
         "title": "Threat of Offensive AI to organizations",
         "date": "Apr 2022",
         "description": "A research summary that describes ways that an adversary can use AI to enhance cyber attacks",
