@@ -4,7 +4,6 @@ import Fade from "react-reveal/Fade"
 import { GoogleScholar, Linkedin, Twitter, Github } from "../components/commons/brand-site";
 import backgroundImage from '../images/bg.jpg';
 import { Helmet } from "react-helmet";
-import Popup from 'reactjs-popup';
 
 import 'reactjs-popup/dist/index.css';
 
@@ -16,29 +15,12 @@ const IndexPage = () => {
                 <title>Manoj Vignesh K M</title>
                 <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap" rel="stylesheet" />
             </Helmet>
-            <div className="h-screen w-screen" style={{backgroundImage: `url(${backgroundImage})`}}>
+            <div className="bg-cover" style={{backgroundImage: `url(${backgroundImage})`}}>
                 <Fade bottom cascade>
                     <div className="max-w-7xl mx-auto flex flex-col h-screen justify-center">
                         <div className="text-white m-2 md:m-0 text-7xl font-bold">Manoj Vignesh K M</div>
                         <div className="text-white m-2 md:m-0 text-2xl py-5 pl-10">
-                            an ambitious 
-                            <Popup 
-                                trigger={<span className="highlighted pb-1"> cybersecurity engineer </span>} 
-                                position="bottom center" 
-                                closeOnDocumentClick 
-                                on={['hover', 'focus']}
-                            >
-                                <div>You know it!</div>
-                            </Popup>
-                             and a
-                            <Popup 
-                                trigger={ <span className="highlighted pb-1"> digitoolsmith </span>} 
-                                position="bottom center" 
-                                closeOnDocumentClick 
-                                on={['hover', 'focus']}
-                            >
-                                <div>Such as an exploit developer, exploitation platform developer</div>
-                            </Popup>
+                            an ambitious <span className="highlighted pb-1">cybersecurity engineer</span> with a keen interest in <span className="highlighted pb-1">software development</span>
                         </div>
                         <div className="flex items-baseline mx-4 md:mx-0 md:space-x-10 flex-col md:flex-row">
                             <Link

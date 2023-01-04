@@ -24,10 +24,10 @@ const AboutPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-16 justify-items-center">
                     <Fade bottom cascade distance="100px">
                         <div className="col-span-1">
-                            <img src={me} alt="" />
+                            <img src={me} alt="" className="rounded-full"/>
                         </div>
                         <div className="col-span-2 text-white w-full p-10">
-                            <p className="text-primary text-3xl my-2">A Cybersecurity engineer</p>
+                            <p className="text-primary text-3xl my-2">Security Software Engineer</p>
                             <p className="italic text-lg"> who believes in contributing to the world's cybersecurity needs with security hyperautomation <Link className="text-sm text-primary link-underline-active pb-1" to="https://blog.kmmanoj.me/a-note-on-how-viable-is-security-hyperautomation-c951a0d6db37">How?</Link></p>
                             
                             <div className="mt-5 text-lg leading-loose">

@@ -122,7 +122,7 @@ const Timeline = () => {
                     </p>
                 </VerticalTimelineElement>
             </VerticalTimeline>
-            <div class="grid gap-10 text-center">
+            <div className="grid gap-10 text-center">
                 <a className="w-full p-5 mt-5 mb-20 bg-primary rounded-full text-black text-2xl" href="/CV.pdf">
                     Download CV
                 </a>
