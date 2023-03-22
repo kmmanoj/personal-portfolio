@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Software Defined Networks 101 | Manoj Vignesh K M</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Software Defined Networks 101" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A (very) brief introduction about Software Defined Networks" />
+<meta property="og:description" content="A (very) brief introduction about Software Defined Networks" />
+<link rel="canonical" href="https://www.kmmanoj.me/2023/03/10/software-defined-networks-101.html" />
+<meta property="og:url" content="https://www.kmmanoj.me/2023/03/10/software-defined-networks-101.html" />
+<meta property="og:site_name" content="Manoj Vignesh K M" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-03-10T23:00:00-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Software Defined Networks 101" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-03-10T23:00:00-05:00","datePublished":"2023-03-10T23:00:00-05:00","description":"A (very) brief introduction about Software Defined Networks","headline":"Software Defined Networks 101","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.kmmanoj.me/2023/03/10/software-defined-networks-101.html"},"url":"https://www.kmmanoj.me/2023/03/10/software-defined-networks-101.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://www.kmmanoj.me/feed.xml" title="Manoj Vignesh K M" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Manoj Vignesh K M</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/profession/">Profession</a><a class="page-link" href="/blogs/">Blogs</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Software Defined Networks 101</h1>
+    <p>
+      
+        <code>beginner</code>, <code>sdn</code>, <code>cloud</code>, <code>networking</code>
+      
+    </p>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2023-03-10T23:00:00-05:00" itemprop="datePublished">Mar 10, 2023
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Software Defined Networking, abbreviated as SDN, is an approach to networking that separates the control plane from the data plane. This architecture allows for management and configuration of network by administrators through software rather than through hardware. Overall, SDN allows for easier scaling and management of the network, and consequently allows development of better network automation capabilities. Further, similar to how virtualization revolutionized utilization of compute systems, SDN in conjunction with NFV (Network Function Virtualization) better utilizes the compute systems for networking.</p>
+
+<p>Before diving into technical details of SDN, one needs to understand the difference between control plane and data plane.</p>
+
+<h2 id="control-plane-vs-data-plane">Control plane vs Data plane</h2>
+
+<p>The control plane is a subset of the network that deals with functional traffic. The functional traffic includes those packets and protocols used to learn about the network and use that information to handle and route packets coming to it. For example, the L3 (OSI level 3 — network layer) network switches exchange OSPF packets in control plane and use this information to learn about the network and evaluate the next hop for packets flowing in the data plane. The data plane is the other subset of the network that deals with consumer traffic. The consumer traffic includes those packets that are exchanged for business purposes. For example, a HTTP packet from a computer to medium.com server asking for the Medium blog home page runs on the data plane.</p>
+
+<h3 id="analogies-for-control-plane-vs-data-plane">Analogies for control plane vs data plane</h3>
+
+<ul>
+  <li>The time spent to chart an action plan happens in control plane, while the time spent in executing the action plan happens in data plane.</li>
+  <li>In a business setting, the services and money involved between the organization and the employees happen in control plane. While, the services and money involved between the organization and the customers happen in data plane.</li>
+  <li>In a computer systems setting, the CPU utilized by the Operating System happens in control plane, while the CPU utilized for user processes happen in data plane.</li>
+</ul>
+
+<h3 id="traditional-network-vs-software-defined-network">Traditional Network vs Software Defined Network</h3>
+
+<p>In a traditional network, the control plane traffic and the data plane intersect significantly as soon in the illustration below. The brain of the network is distributed across different network devices, and they work in tandem to move packets in data plane from one end to another end.
+Traditional Network</p>
+
+<p><img src="/assets/img/sdn101/traditional.png" alt="Figure 1: Traditional Network" />
+<br /><small style="color: gray">Figure 1: Traditional Network</small><br /></p>
+
+<p>While, in SDN the control plane is separated from the data plane as shown in the illustration below. The brain of the network is centralized at the SDN controller. The SDN switches and routers consult the SDN controller to determine what action to take for this packet.</p>
+
+<p>To avoid burdening the SDN controller for every packet by every switch, the SDN controller could install rules in SDN switches and routers which could be of the (simplest) form (in RYU controller):</p>
+
+<p><code class="language-plaintext highlighter-rouge">if(condition X) perform action Y</code></p>
+
+<p>For example, condition X can be, packet is entering port <code class="language-plaintext highlighter-rouge">swt0</code> and the corresponding action Y can be packet should exit port <code class="language-plaintext highlighter-rouge">swt1</code>. This way whenever an SDN switch that has the above rule installed receives a packet from port <code class="language-plaintext highlighter-rouge">swt0</code> it would route the packet to port <code class="language-plaintext highlighter-rouge">swt1</code> without consulting the SDN controller.</p>
+
+<p><img src="/assets/img/sdn101/sdn.png" alt="Figure 2: SDN Network" />
+<br /><small style="color: gray">Figure 2: SDN Network</small><br /></p>
+
+<p>That is a short introduction about Software Defined Networks. I hope you gained a basic understanding of SDN is different from traditional networks and what are the basic constructs and components of an SDN network.</p>
+
+  </div><a class="u-url" href="/2023/03/10/software-defined-networks-101.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Manoj Vignesh K M</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+
+            <li><p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://www.linkedin.com/in/kmmanoj"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">kmmanoj</span></a></li><li><a href="https://www.twitter.com/kmmanojv96"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">kmmanojv96</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Manoj&#39;s articulated knowledge base of cybersecurity research</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -1,39 +1,58 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="https://www.kmmanoj.me/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.kmmanoj.me/" rel="alternate" type="text/html" /><updated>2023-03-22T03:28:57-04:00</updated><id>https://www.kmmanoj.me/feed.xml</id><title type="html">Manoj Vignesh K M</title><subtitle>Manoj&apos;s articulated knowledge base of cybersecurity research</subtitle><entry><title type="html">Software Defined Networks 101</title><link href="https://www.kmmanoj.me/2023/03/10/software-defined-networks-101.html" rel="alternate" type="text/html" title="Software Defined Networks 101" /><published>2023-03-10T23:00:00-05:00</published><updated>2023-03-10T23:00:00-05:00</updated><id>https://www.kmmanoj.me/2023/03/10/software-defined-networks-101</id><content type="html" xml:base="https://www.kmmanoj.me/2023/03/10/software-defined-networks-101.html"><![CDATA[<p>Software Defined Networking, abbreviated as SDN, is an approach to networking that separates the control plane from the data plane. This architecture allows for management and configuration of network by administrators through software rather than through hardware. Overall, SDN allows for easier scaling and management of the network, and consequently allows development of better network automation capabilities. Further, similar to how virtualization revolutionized utilization of compute systems, SDN in conjunction with NFV (Network Function Virtualization) better utilizes the compute systems for networking.</p>
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Using GNS3 to learn SDN | Manoj Vignesh K M</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Using GNS3 to learn SDN" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Setup and configure your GNS3 with required elements to learn, develop and test Software Defined Networks." />
+<meta property="og:description" content="Setup and configure your GNS3 with required elements to learn, develop and test Software Defined Networks." />
+<link rel="canonical" href="https://www.kmmanoj.me/2023/03/10/using-gns3-to-learn-sdn.html" />
+<meta property="og:url" content="https://www.kmmanoj.me/2023/03/10/using-gns3-to-learn-sdn.html" />
+<meta property="og:site_name" content="Manoj Vignesh K M" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-03-10T23:00:00-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Using GNS3 to learn SDN" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-03-10T23:00:00-05:00","datePublished":"2023-03-10T23:00:00-05:00","description":"Setup and configure your GNS3 with required elements to learn, develop and test Software Defined Networks.","headline":"Using GNS3 to learn SDN","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.kmmanoj.me/2023/03/10/using-gns3-to-learn-sdn.html"},"url":"https://www.kmmanoj.me/2023/03/10/using-gns3-to-learn-sdn.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://www.kmmanoj.me/feed.xml" title="Manoj Vignesh K M" /></head>
+<body><header class="site-header" role="banner">
 
-<p>Before diving into technical details of SDN, one needs to understand the difference between control plane and data plane.</p>
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Manoj Vignesh K M</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
 
-<h2 id="control-plane-vs-data-plane">Control plane vs Data plane</h2>
+        <div class="trigger"><a class="page-link" href="/profession/">Profession</a><a class="page-link" href="/blogs/">Blogs</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
-<p>The control plane is a subset of the network that deals with functional traffic. The functional traffic includes those packets and protocols used to learn about the network and use that information to handle and route packets coming to it. For example, the L3 (OSI level 3 — network layer) network switches exchange OSPF packets in control plane and use this information to learn about the network and evaluate the next hop for packets flowing in the data plane. The data plane is the other subset of the network that deals with consumer traffic. The consumer traffic includes those packets that are exchanged for business purposes. For example, a HTTP packet from a computer to medium.com server asking for the Medium blog home page runs on the data plane.</p>
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Using GNS3 to learn SDN</h1>
+    <p>
+      
+        <code>intermediate</code>, <code>sdn</code>, <code>cloud</code>, <code>networking</code>
+      
+    </p>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2023-03-10T23:00:00-05:00" itemprop="datePublished">Mar 10, 2023
+      </time></p>
+  </header>
 
-<h3 id="analogies-for-control-plane-vs-data-plane">Analogies for control plane vs data plane</h3>
-
-<ul>
-  <li>The time spent to chart an action plan happens in control plane, while the time spent in executing the action plan happens in data plane.</li>
-  <li>In a business setting, the services and money involved between the organization and the employees happen in control plane. While, the services and money involved between the organization and the customers happen in data plane.</li>
-  <li>In a computer systems setting, the CPU utilized by the Operating System happens in control plane, while the CPU utilized for user processes happen in data plane.</li>
-</ul>
-
-<h3 id="traditional-network-vs-software-defined-network">Traditional Network vs Software Defined Network</h3>
-
-<p>In a traditional network, the control plane traffic and the data plane intersect significantly as soon in the illustration below. The brain of the network is distributed across different network devices, and they work in tandem to move packets in data plane from one end to another end.
-Traditional Network</p>
-
-<p><img src="/assets/img/sdn101/traditional.png" alt="Figure 1: Traditional Network" />
-<br /><small style="color: gray">Figure 1: Traditional Network</small><br /></p>
-
-<p>While, in SDN the control plane is separated from the data plane as shown in the illustration below. The brain of the network is centralized at the SDN controller. The SDN switches and routers consult the SDN controller to determine what action to take for this packet.</p>
-
-<p>To avoid burdening the SDN controller for every packet by every switch, the SDN controller could install rules in SDN switches and routers which could be of the (simplest) form (in RYU controller):</p>
-
-<p><code class="language-plaintext highlighter-rouge">if(condition X) perform action Y</code></p>
-
-<p>For example, condition X can be, packet is entering port <code class="language-plaintext highlighter-rouge">swt0</code> and the corresponding action Y can be packet should exit port <code class="language-plaintext highlighter-rouge">swt1</code>. This way whenever an SDN switch that has the above rule installed receives a packet from port <code class="language-plaintext highlighter-rouge">swt0</code> it would route the packet to port <code class="language-plaintext highlighter-rouge">swt1</code> without consulting the SDN controller.</p>
-
-<p><img src="/assets/img/sdn101/sdn.png" alt="Figure 2: SDN Network" />
-<br /><small style="color: gray">Figure 2: SDN Network</small><br /></p>
-
-<p>That is a short introduction about Software Defined Networks. I hope you gained a basic understanding of SDN is different from traditional networks and what are the basic constructs and components of an SDN network.</p>]]></content><author><name></name></author><category term="beginner" /><category term="sdn" /><category term="cloud" /><category term="networking" /><summary type="html"><![CDATA[A (very) brief introduction about Software Defined Networks]]></summary></entry><entry><title type="html">Using GNS3 to learn SDN</title><link href="https://www.kmmanoj.me/2023/03/10/using-gns3-to-learn-sdn.html" rel="alternate" type="text/html" title="Using GNS3 to learn SDN" /><published>2023-03-10T23:00:00-05:00</published><updated>2023-03-10T23:00:00-05:00</updated><id>https://www.kmmanoj.me/2023/03/10/using-gns3-to-learn-sdn</id><content type="html" xml:base="https://www.kmmanoj.me/2023/03/10/using-gns3-to-learn-sdn.html"><![CDATA[<p><a href="https://www.gns3.com/">GNS3</a> is a network simulation platform for creating and testing virtual networks with routers, switches, and other devices. There are many other alternatives to GNS3, but I personally prefer GNS3 since the UI is user friendly, supports multiple types of network devices and protocols and more importantly has integrations with Docker, VirtualBox and VMware.</p>
+  <div class="post-content e-content" itemprop="articleBody">
+    <p><a href="https://www.gns3.com/">GNS3</a> is a network simulation platform for creating and testing virtual networks with routers, switches, and other devices. There are many other alternatives to GNS3, but I personally prefer GNS3 since the UI is user friendly, supports multiple types of network devices and protocols and more importantly has integrations with Docker, VirtualBox and VMware.</p>
 
 <p>In one of my previous blog articles, I presented a brief and elementary introduction about Software Defined Networks. In this blog article, we shall walk through setting up GNS3, and further implement a simple controller using RYU framework on a network of SDN switches in GNS3.</p>
 
@@ -191,4 +210,37 @@ Verification</p>
 <p><img src="/assets/img/gns-sdn/fig7.png" alt="Figure 7: Topology idea for multiple Open vSwitches" />
 <br /><small>Figure 7: Topology idea for multiple Open vSwitches</small><br /></p>
 
-<p>The controller code used here performs no more than the job of a network hub. I would strongly suggest you to learn how to develop a controller that performs L2 switching. Further, learn how to develop a controller that performs L3 switching. What about a controller that manages a cluster of switches performing L2 and L3 switching?</p>]]></content><author><name></name></author><category term="intermediate" /><category term="sdn" /><category term="cloud" /><category term="networking" /><summary type="html"><![CDATA[Setup and configure your GNS3 with required elements to learn, develop and test Software Defined Networks.]]></summary></entry><entry><title type="html">What can go wrong in a cryptographic system</title><link href="https://www.kmmanoj.me/2022/10/30/what-can-go-wrong-in-a-cryptographic-system.html" rel="alternate" type="text/html" title="What can go wrong in a cryptographic system" /><published>2022-10-30T00:00:00-04:00</published><updated>2022-10-30T00:00:00-04:00</updated><id>https://www.kmmanoj.me/2022/10/30/what-can-go-wrong-in-a-cryptographic-system</id><content type="html" xml:base="https://www.kmmanoj.me/2022/10/30/what-can-go-wrong-in-a-cryptographic-system.html"><![CDATA[]]></content><author><name></name></author><category term="advanced" /><summary type="html"><![CDATA[An enumeration and brief description of parameters that should be considered while designing and developing a secure cryptographic system]]></summary></entry><entry><title type="html">Threat of Offensive AI to organizations</title><link href="https://www.kmmanoj.me/2022/04/24/threat-of-offensive-ai-to-organizations.html" rel="alternate" type="text/html" title="Threat of Offensive AI to organizations" /><published>2022-04-24T00:00:00-04:00</published><updated>2022-04-24T00:00:00-04:00</updated><id>https://www.kmmanoj.me/2022/04/24/threat-of-offensive-ai-to-organizations</id><content type="html" xml:base="https://www.kmmanoj.me/2022/04/24/threat-of-offensive-ai-to-organizations.html"><![CDATA[]]></content><author><name></name></author><category term="beginner" /><summary type="html"><![CDATA[A summary of the survey that describes how AI can be used by adversaries to enhance their cyber attacks]]></summary></entry><entry><title type="html">How complex can Authorization get?</title><link href="https://www.kmmanoj.me/2022/03/20/how-complex-can-authorization-get.html" rel="alternate" type="text/html" title="How complex can Authorization get?" /><published>2022-03-20T00:00:00-04:00</published><updated>2022-03-20T00:00:00-04:00</updated><id>https://www.kmmanoj.me/2022/03/20/how-complex-can-authorization-get</id><content type="html" xml:base="https://www.kmmanoj.me/2022/03/20/how-complex-can-authorization-get.html"><![CDATA[]]></content><author><name></name></author><category term="intermediate" /><summary type="html"><![CDATA[Builds on the Authorization component of Identity and Access Management system from zero to how systems implement today]]></summary></entry><entry><title type="html">Man-in-the-middle: A tale of a hoax DHCP server</title><link href="https://www.kmmanoj.me/2021/12/06/man-in-the-middle-a-tale-of-a-hoax-dhcp-server.html" rel="alternate" type="text/html" title="Man-in-the-middle: A tale of a hoax DHCP server" /><published>2021-12-06T23:00:00-05:00</published><updated>2021-12-06T23:00:00-05:00</updated><id>https://www.kmmanoj.me/2021/12/06/man-in-the-middle-a-tale-of-a-hoax-dhcp-server</id><content type="html" xml:base="https://www.kmmanoj.me/2021/12/06/man-in-the-middle-a-tale-of-a-hoax-dhcp-server.html"><![CDATA[]]></content><author><name></name></author><category term="advanced" /><summary type="html"><![CDATA[Learn how a user can act like a hoax DHCP server and situate himself as a man in the middle, and how one can prevent such attacks]]></summary></entry><entry><title type="html">How I do Machine Learning at work</title><link href="https://www.kmmanoj.me/2021/03/26/how-i-do-machine-learning-at-work.html" rel="alternate" type="text/html" title="How I do Machine Learning at work" /><published>2021-03-26T00:00:00-04:00</published><updated>2021-03-26T00:00:00-04:00</updated><id>https://www.kmmanoj.me/2021/03/26/how-i-do-machine-learning-at-work</id><content type="html" xml:base="https://www.kmmanoj.me/2021/03/26/how-i-do-machine-learning-at-work.html"><![CDATA[]]></content><author><name></name></author><category term="beginner" /><summary type="html"><![CDATA[A method used among group of data scientists to identify and refine feature set for a machine learning problem]]></summary></entry><entry><title type="html">FMEA of a microservice that uses third-party APIs</title><link href="https://www.kmmanoj.me/2021/01/22/fmea-of-a-microservice-that-uses-third-party-apis.html" rel="alternate" type="text/html" title="FMEA of a microservice that uses third-party APIs" /><published>2021-01-22T23:00:00-05:00</published><updated>2021-01-22T23:00:00-05:00</updated><id>https://www.kmmanoj.me/2021/01/22/fmea-of-a-microservice-that-uses-third-party-apis</id><content type="html" xml:base="https://www.kmmanoj.me/2021/01/22/fmea-of-a-microservice-that-uses-third-party-apis.html"><![CDATA[]]></content><author><name></name></author><category term="advanced" /><summary type="html"><![CDATA[How do I simulate failure of an API endpoint that I don’t have control over while performing Failure Mode and Effect Analysis?]]></summary></entry><entry><title type="html">DHCP starvation attack without making any DHCP requests</title><link href="https://www.kmmanoj.me/2020/08/20/dhcp-starvation-attack-without-making-any-dhcp-requests.html" rel="alternate" type="text/html" title="DHCP starvation attack without making any DHCP requests" /><published>2020-08-20T00:00:00-04:00</published><updated>2020-08-20T00:00:00-04:00</updated><id>https://www.kmmanoj.me/2020/08/20/dhcp-starvation-attack-without-making-any-dhcp-requests</id><content type="html" xml:base="https://www.kmmanoj.me/2020/08/20/dhcp-starvation-attack-without-making-any-dhcp-requests.html"><![CDATA[]]></content><author><name></name></author><category term="advanced" /><summary type="html"><![CDATA[Most defense systems filter out repeated DHCP requests. What if you could perform DHCP starvation without sending a DCHP request?]]></summary></entry><entry><title type="html">Gain access to an internal machine using Port forwarding - Penetration Testing</title><link href="https://www.kmmanoj.me/2020/08/10/gain-access-to-an-internal-machine-using-port-forwarding-penetration-testing.html" rel="alternate" type="text/html" title="Gain access to an internal machine using Port forwarding - Penetration Testing" /><published>2020-08-10T00:00:00-04:00</published><updated>2020-08-10T00:00:00-04:00</updated><id>https://www.kmmanoj.me/2020/08/10/gain-access-to-an-internal-machine-using-port-forwarding-penetration-testing</id><content type="html" xml:base="https://www.kmmanoj.me/2020/08/10/gain-access-to-an-internal-machine-using-port-forwarding-penetration-testing.html"><![CDATA[]]></content><author><name></name></author><category term="beginner" /><summary type="html"><![CDATA[Set up a penetration testing environment using docker containers in docker networks to learn various types of port forwarding techniques]]></summary></entry></feed>
+<p>The controller code used here performs no more than the job of a network hub. I would strongly suggest you to learn how to develop a controller that performs L2 switching. Further, learn how to develop a controller that performs L3 switching. What about a controller that manages a cluster of switches performing L2 and L3 switching?</p>
+
+  </div><a class="u-url" href="/2023/03/10/using-gns3-to-learn-sdn.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Manoj Vignesh K M</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+
+            <li><p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://www.linkedin.com/in/kmmanoj"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">kmmanoj</span></a></li><li><a href="https://www.twitter.com/kmmanojv96"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">kmmanojv96</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Manoj&#39;s articulated knowledge base of cybersecurity research</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

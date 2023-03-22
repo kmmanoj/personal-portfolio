@@ -18,14 +18,15 @@ layout: default
             {{ post.title | escape }}
           </a>
         </h3>
-        {%- if site.show_excerpts -%}
-          {{ post.excerpt }}
+        {%- if site.show_excerpts && post.excerpt -%}
+          {{ post.excerpt }}<br/>
         {%- endif -%}
         {% if post.tags.size > 0 %}
           <small><b>Tag{% if post.tags.size > 1 %}s{% endif %}:</b>
-          {{ post.tags | sort | join: ", " }}</small>
+          {{ post.tags | join: ", " }}</small>
         {% endif %}
       </li>
+      <hr style="margin: 5px 5px; color: #eee"/>
       {%- endfor -%}
     </ul>
   {%- endif -%}
