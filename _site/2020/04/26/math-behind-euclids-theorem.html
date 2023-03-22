@@ -37,13 +37,15 @@
 </header>
 <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+        <a href="/blogs">&lt; To Blog home</a>
+
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
     <h1 class="post-title p-name" itemprop="name headline">Math behind Euclid&#39;s theorem</h1>
     <p>
       
-        <code>advanced</code>
+        <code>advanced</code> <code>application</code> <code>math</code>
       
     </p>
     <p class="post-meta">
@@ -52,9 +54,113 @@
   </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    
+    <p>We were taught in our programming classes that, to calculate gcd of two integers <strong>efficiently</strong> use the Euclid’s algorithm.</p>
 
-  </div><a class="u-url" href="/2020/04/26/math-behind-euclids-theorem.html" hidden></a>
+<h2 id="magic">Magic</h2>
+
+<p>The Euclid algorithm is programmed as follows:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">gcd</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="c1"># hatch case
+</span>    <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">b</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nf">gcd</span><span class="p">(</span><span class="n">b</span> <span class="o">%</span> <span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="nf">gcd</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+</code></pre></div></div>
+
+<p>Take a step back and think for a minute. Why does it work?</p>
+
+<h2 id="how-did-you-do-that">How did you do that?</h2>
+
+<p>I will explain this with the magic as the starting point to end up stating the Euclid’s theorem. Reverse Engineering!</p>
+
+<h3 id="rewriting-the-code">Rewriting the code</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">gcd</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">while</span> <span class="n">a</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># to keep it descriptive
+</span>        <span class="n">tmp</span> <span class="o">=</span> <span class="n">b</span> <span class="o">%</span> <span class="n">a</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">a</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">tmp</span>
+    <span class="k">return</span> <span class="n">b</span>
+
+<span class="k">assert</span> <span class="nf">gcd</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+</code></pre></div></div>
+
+<p>Now carefully understand the following,</p>
+
+<p><img src="/assets/img/math-euclid/formula.png" alt="Formula" /></p>
+
+<p><code class="language-plaintext highlighter-rouge">%</code> is not a basic arithmetic operator in mathematics. Consider the following implementation of <code class="language-plaintext highlighter-rouge">%</code> function:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">'''
+b % a
+'''</span>
+<span class="k">def</span> <span class="nf">mod</span><span class="p">(</span><span class="n">b</span><span class="p">:</span> <span class="nb">int</span> <span class="p">,</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">b</span>
+    <span class="k">while</span> <span class="n">tmp</span> <span class="o">&gt;=</span> <span class="n">a</span><span class="p">:</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">tmp</span> <span class="o">-</span> <span class="n">a</span>
+    <span class="k">return</span> <span class="n">tmp</span>
+
+<span class="k">assert</span> <span class="nf">mod</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="o">==</span> <span class="mi">15</span> <span class="o">%</span> <span class="mi">6</span>
+</code></pre></div></div>
+
+<p>Now, Let’s replace the mod function with its implementation in the former code snippet.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">gcd</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">while</span> <span class="n">a</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># replacement BEGIN
+</span>        <span class="n">tmp</span> <span class="o">=</span> <span class="n">b</span>
+        <span class="k">while</span> <span class="n">tmp</span> <span class="o">&gt;=</span> <span class="n">a</span><span class="p">:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">tmp</span> <span class="o">-</span> <span class="n">a</span>
+        <span class="c1"># replacement END
+</span>        <span class="n">b</span> <span class="o">=</span> <span class="n">a</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">tmp</span>
+    <span class="k">return</span> <span class="n">b</span>
+
+<span class="k">assert</span> <span class="nf">gcd</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+</code></pre></div></div>
+
+<h2 id="wrap-up">Wrap-up</h2>
+
+<p>To understand better, let us optimize the code to make analysis easier. Observe that <code class="language-plaintext highlighter-rouge">b</code> takes the value of a after <code class="language-plaintext highlighter-rouge">n</code> <code class="language-plaintext highlighter-rouge">a</code>’s are removed from it, and <code class="language-plaintext highlighter-rouge">a</code> is given the processed <code class="language-plaintext highlighter-rouge">b</code> value. Consider the second iteration. If the values were swapped, the code runs as expected. But, if they were not swapped, then we need to make an edition such that <code class="language-plaintext highlighter-rouge">tmp</code> takes <code class="language-plaintext highlighter-rouge">a</code>, the condition becomes <code class="language-plaintext highlighter-rouge">tmp &gt;= b</code>, and the loop-code is <code class="language-plaintext highlighter-rouge">tmp = tmp-b</code>. Let’s make these changes to the code and merge the loops.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">gcd</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">while</span> <span class="n">a</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">b</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">a</span> <span class="o">&gt;=</span> <span class="n">b</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">b</span> <span class="o">-</span> <span class="n">a</span>
+    <span class="c1"># loop breaks when either one is 0
+</span>    <span class="k">return</span> <span class="n">a</span> <span class="k">if</span> <span class="n">b</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">b</span>
+
+<span class="k">assert</span> <span class="nf">gcd</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+</code></pre></div></div>
+
+<p>Take a moment to understand and verify the code snippet.
+Thus, we observe that <code class="language-plaintext highlighter-rouge">gcd(a, b) = gcd(a-b, b) = gcd(a, b-a)</code>.</p>
+
+<p>Let, <code class="language-plaintext highlighter-rouge">d</code> be a factor of both <code class="language-plaintext highlighter-rouge">a</code> and <code class="language-plaintext highlighter-rouge">b</code>. Hence, <code class="language-plaintext highlighter-rouge">d|a</code> (d divides a) and <code class="language-plaintext highlighter-rouge">d|b</code> (d divides b).</p>
+
+<p>In mathematical form, <code class="language-plaintext highlighter-rouge">a = dx, b = dy</code>, where <code class="language-plaintext highlighter-rouge">x</code>, <code class="language-plaintext highlighter-rouge">y</code> are Integers (<code class="language-plaintext highlighter-rouge">Z</code>).</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a - b = dx - dy
+=&gt; a - b = d(x - y)
+and, 
+b - a = dy - dx
+=&gt; b - a = d(y - x)
+</code></pre></div></div>
+
+<p>Hence, <code class="language-plaintext highlighter-rouge">d|a</code>, <code class="language-plaintext highlighter-rouge">d|b</code>, <code class="language-plaintext highlighter-rouge">d|(a-b)</code> and <code class="language-plaintext highlighter-rouge">d|(b-a)</code>. The least positive <code class="language-plaintext highlighter-rouge">d</code> that we finally end up is the GCD of <code class="language-plaintext highlighter-rouge">a</code> and <code class="language-plaintext highlighter-rouge">b</code>.</p>
+
+<p>Now traceback through this article, to understand why Euclid’s GCD theorem works.</p>
+
+  </div>
+
+
+  <a href="/blogs">&lt; To Blog home</a><a class="u-url" href="/2020/04/26/math-behind-euclids-theorem.html" hidden></a>
 </article>
 
       </div>

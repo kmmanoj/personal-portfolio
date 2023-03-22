@@ -2,7 +2,7 @@
 layout: post
 title:  "Software Defined Networks 101"
 date:   2023-03-11 00:00:00 -0400
-tags: [beginner, sdn, cloud, networking]
+tags: [beginner, concept, sdn, cloud, networking]
 excerpt: A (very) brief introduction about Software Defined Networks
 ---
 
@@ -12,7 +12,7 @@ Before diving into technical details of SDN, one needs to understand the differe
 
 ## Control plane vs Data plane
 
-The control plane is a subset of the network that deals with functional traffic. The functional traffic includes those packets and protocols used to learn about the network and use that information to handle and route packets coming to it. For example, the L3 (OSI level 3 — network layer) network switches exchange OSPF packets in control plane and use this information to learn about the network and evaluate the next hop for packets flowing in the data plane. The data plane is the other subset of the network that deals with consumer traffic. The consumer traffic includes those packets that are exchanged for business purposes. For example, a HTTP packet from a computer to medium.com server asking for the Medium blog home page runs on the data plane.
+The control plane is a subset of the network that deals with functional traffic. The functional traffic includes those packets and protocols used to learn about the network and use that information to handle and route packets coming to it. For example, the L3 (OSI level 3 - network layer) network switches exchange OSPF packets in control plane and use this information to learn about the network and evaluate the next hop for packets flowing in the data plane. The data plane is the other subset of the network that deals with consumer traffic. The consumer traffic includes those packets that are exchanged for business purposes. For example, a HTTP packet from a computer to kmmanoj.me server asking for the kmmanoj website's home page runs on the data plane.
 
 ### Analogies for control plane vs data plane
 
@@ -23,7 +23,6 @@ The control plane is a subset of the network that deals with functional traffic.
 ### Traditional Network vs Software Defined Network
 
 In a traditional network, the control plane traffic and the data plane intersect significantly as soon in the illustration below. The brain of the network is distributed across different network devices, and they work in tandem to move packets in data plane from one end to another end.
-Traditional Network
 
 ![Figure 1: Traditional Network](/assets/img/sdn101/traditional.png)
 <br/><small style="color: gray">Figure 1: Traditional Network</small><br/>

@@ -37,13 +37,15 @@
 </header>
 <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+        <a href="/blogs">&lt; To Blog home</a>
+
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
     <h1 class="post-title p-name" itemprop="name headline">Deploying a scalable flask app using Gunicorn and Nginx, in Docker: Part #2</h1>
     <p>
       
-        <code>beginner</code>
+        <code>beginner</code> <code>application</code> <code>software engineering</code>
       
     </p>
     <p class="post-meta">
@@ -52,9 +54,126 @@
   </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    
+    <p>In the <a href="/2018/11/20/deploying-a-scalable-flask-app-using-gunicorn-and-nginx-in-docker-part-1.html">previous article</a>, we learned to create a docker image of a flask app interfaced by Gunicorn WSGI.</p>
 
-  </div><a class="u-url" href="/2018/11/20/deploying-a-scalable-flask-app-using-gunicorn-and-nginx-in-docker-part-2.html" hidden></a>
+<p>You can skip that story if you are already familiar with deploying a flask app in dockers. I have the docker image pushed into my docker hub repository.</p>
+
+<p><a href="https://hub.docker.com/r/kmmanoj/flask_gunicorn_app/">https://hub.docker.com/r/kmmanoj/flask_gunicorn_app/</a></p>
+
+<p>In this story, we will do some architecting work. Deploy the flask app, and handle its scalability.</p>
+
+<p><img src="/assets/img/flask-app/objective.png" alt="Figure 1: Objective Architecture" />
+<br /><small style="color: gray">Figure 1: Objective Architecture</small><br /></p>
+
+<h3 id="observations">Observations:</h3>
+
+<ul>
+  <li>Let the static files be placed in a volume, that is accessible by both Nginx and flask app. Flask app, to write; Nginx, to read.</li>
+  <li>We are going to create 3 replicas of the flask_gunicorn_app, and make the load balancer handle the requests distribution.</li>
+  <li>All the components are part of the same virtual network. (For a particular reason, we will explore it eventually #same-vnet)</li>
+</ul>
+
+<p>Let us begin by configuring the Nginx server. There are two options to configure the Nginx server:</p>
+
+<ul>
+  <li>Create a new image, with the new configuration.</li>
+  <li>Use the existing base image, and mount the configuration folder in the host to conf.d/ in the nginx container.</li>
+</ul>
+
+<p>I will go ahead with the latter option.</p>
+
+<p>Create a directory, say <code class="language-plaintext highlighter-rouge">nginx_conf/</code>, and create a file called <code class="language-plaintext highlighter-rouge">app.conf</code> under it.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+    listen  80;
+    server_name localhost;
+
+    location / {
+        proxy_pass http://webapp:8000/;
+    }
+
+    location /static {
+        alias /var/www-data;
+    }
+}
+</code></pre></div></div>
+
+<p>what is http://webapp:8000/? It is the name of the service which runs the flask app in replicas behind the load balancer. We will soon see that docker handles creating a load balancer for us, for the replicas we create. Therefore, when creating a load balancer is not in our control, we eventually do not have control over the IP address that gets assigned to the load balancer. (To keep it simple). Hence, we can refer to the load balancer by the name of the service, if the service and the nginx server are in the same virtual subnet #same-vnet.</p>
+
+<p>To start a Docker service, the machine should be a part of the swarm. Swarm is a cluster of machines that work together. To know more about docker swarm follow this link: <a href="https://docs.docker.com/get-started/part4/">https://docs.docker.com/get-started/part4/</a></p>
+
+<p>To make the machine a part of the swarm, as the first node (manager node), run:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker swarm init
+</code></pre></div></div>
+
+<p>The acknowledgement output gives more details about how to add more nodes to the swarm.</p>
+
+<h2 id="step-1-create-a-virtual-network">Step #1: Create a virtual network</h2>
+
+<p>Let’s now create a virtual network where all the service components will be placed. To create a docker network, run:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker network create web_network <span class="se">\</span>
+<span class="nt">--driver</span> overlay <span class="se">\</span>
+<span class="nt">--subnet</span><span class="o">=</span>192.168.100.0/24
+</code></pre></div></div>
+
+<p>An overlay network is created having subnet <code class="language-plaintext highlighter-rouge">192.168.100.0/24</code>.</p>
+
+<h2 id="step-2-create-a-docker-volume">Step #2: Create a docker volume</h2>
+
+<p>Next, we create a docker volume that holds the static files. To create a docker volume, run:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker volume create web_static
+</code></pre></div></div>
+
+<h2 id="step-3-create-the-web-application-service">Step #3: Create the web application service</h2>
+
+<p>In this step, we will have to create 3 replicas of the <code class="language-plaintext highlighter-rouge">flask_gunicorn_app</code>, and put it behind the load balancer.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker service create <span class="se">\</span>
+<span class="nt">--name</span> webapp <span class="se">\</span>
+<span class="nt">--replicas</span> 3 <span class="se">\</span>
+<span class="nt">--mount</span> <span class="nv">src</span><span class="o">=</span>web_static,dst<span class="o">=</span>/app/static <span class="se">\</span>
+<span class="nt">--network</span> web_network <span class="se">\</span>
+kmmanoj/flask_gunicorn_app
+</code></pre></div></div>
+
+<p>How easy it is to create, three replicas, behind a load balancer.</p>
+
+<h2 id="step-4-create-the-web-proxy-service">Step #4: Create the web proxy service</h2>
+
+<p>Finally, we are going to setup the webproxy server.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker service create <span class="se">\</span>
+<span class="nt">--name</span> webproxy <span class="se">\</span>
+<span class="nt">--network</span> web_network <span class="se">\</span>
+<span class="nt">--mount</span> <span class="nv">src</span><span class="o">=</span>web_static,dst<span class="o">=</span>/var/www-data <span class="se">\</span>
+<span class="nt">--mount</span> <span class="nb">type</span><span class="o">=</span><span class="nb">bind</span>,src<span class="o">=</span>/path/to/nginx_conf,dst<span class="o">=</span>/etc/nginx/conf.d <span class="se">\</span>
+<span class="nt">-p</span> 8080:80 <span class="se">\</span>
+nginx
+</code></pre></div></div>
+
+<p>That’s it! We are ready with the objective architecture.</p>
+
+<p>Verify by running:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker network inspect web_network
+</code></pre></div></div>
+
+<p>to see the list of containers running. You may find a container that has a substring ‘endpoint’, that happens to be the load balancer created by the docker.</p>
+
+<h2 id="step-5-test">Step #5: Test</h2>
+
+<p>Open up your browser and point to <code class="language-plaintext highlighter-rouge">http://localhost:8080/</code></p>
+
+<p><img src="/assets/img/flask-app/test.png" alt="Figure 2: Test" />
+<br /><small style="color: gray">Figure 2: Test</small><br /></p>
+
+  </div>
+
+
+  <a href="/blogs">&lt; To Blog home</a><a class="u-url" href="/2018/11/20/deploying-a-scalable-flask-app-using-gunicorn-and-nginx-in-docker-part-2.html" hidden></a>
 </article>
 
       </div>

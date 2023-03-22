@@ -37,13 +37,15 @@
 </header>
 <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+        <a href="/blogs">&lt; To Blog home</a>
+
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
     <h1 class="post-title p-name" itemprop="name headline">Gain access to an internal machine using Port forwarding - Setup experiment environment</h1>
     <p>
       
-        <code>beginner</code>
+        <code>intermediate</code> <code>application</code> <code>cybersecurity</code> <code>networking</code>
       
     </p>
     <p class="post-meta">
@@ -52,9 +54,139 @@
   </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    
+    <p>Port forwarding is a technique in which a port in one machine is tunneled to a port in another machine. In simple words, a request made to a port <code class="language-plaintext highlighter-rouge">P1</code> of a machine M1 is “forwarded” as a request to port <code class="language-plaintext highlighter-rouge">P2</code> of a machine <code class="language-plaintext highlighter-rouge">M2</code>.</p>
 
-  </div><a class="u-url" href="/2020/08/09/gain-access-to-an-internal-machine-using-port-forwarding-setup-experiment-environment.html" hidden></a>
+<p>Imagine a web application server, where the incoming traffic is filtered by a firewall that allows only traffic to port 80 and 443 and denies the rest. A malicious user found the password to login to the web application server at port 22. But unfortunately, the firewall denies his SSH requests. What if the malicious user could port forward the request coming to port 80 of the web application server to port 22 of it? This way, the SSH requests made at port 80 of the server would be “forwarded” to port 22 and eventually serviced by <code class="language-plaintext highlighter-rouge">sshd</code> of the server.</p>
+
+<h2 id="scenario">Scenario</h2>
+
+<p>Imagine yourself to be a penetration tester. After a successful social engineering attack, you enter the data center and connect your computer to the network. Your social engineering skills are so effective that you managed to learn the SSH login passwords to the jump server (or) bastion server and an internal server in the enterprise network. <strong>Your intention is to place a hoax malware in the internal server (<a href="https://en.wikipedia.org/wiki/Watering_hole_attack">watering hole</a>) in the enterprise network</strong>. A bastion server in the data center has two network interfaces. One that connects to the enterprise network and another to the data center network.</p>
+
+<p><img src="/assets/img/pivoting/scene.png" alt="Scenario Visual" />
+<br /><small style="color: gray">Scenario Visualization</small><br /></p>
+
+<p>Let’s enumerate the information you have:</p>
+
+<ul>
+  <li>The data center is in <code class="language-plaintext highlighter-rouge">172.17.0.0/16</code> subnet and the enterprise is in <code class="language-plaintext highlighter-rouge">10.10.10.0/24</code> subnet.</li>
+  <li>The IP address of your machine is <code class="language-plaintext highlighter-rouge">172.17.0.1</code>.</li>
+  <li>The IP address of the network interface of the bastion server facing the data center network is <code class="language-plaintext highlighter-rouge">172.17.0.2</code>, while the network interface that is facing the enterprise network is <code class="language-plaintext highlighter-rouge">10.10.10.2</code>.</li>
+  <li>The IP address of the internal server is <code class="language-plaintext highlighter-rouge">10.10.10.3</code>.</li>
+  <li>The internal server doesn’t have access to the internet. (Somehow)</li>
+  <li>The SSH login credentials to the bastion server is <code class="language-plaintext highlighter-rouge">bastion:fortwall</code> and that of the internal server is <code class="language-plaintext highlighter-rouge">admin:homeportal</code>.</li>
+</ul>
+
+<p>In this article, we shall go through the procedure to set up the environment replicating the above scenario. In the <a href="/2020/08/10/gain-access-to-an-internal-machine-using-port-forwarding-penetration-testing.html">following article</a>, we shall carry out the penetration test.</p>
+
+<h2 id="lets-learn-by-doing---setup">Let’s learn by doing - Setup</h2>
+
+<p>We shall set up an environment, as shown in the above diagram, in our local machine to perform the attack.</p>
+
+<p>For the environment setup, we shall use dockers to create the relevant network and nodes. For the purpose of this demonstration, ensure that the penetration testing machine has the following utilities installed (most of them found pre-installed in Kali Linux distribution):</p>
+
+<ul>
+  <li><a href="https://linuxhint.com/install_docker_kali_linux/">docker-engine</a></li>
+  <li>nmap</li>
+  <li>ssh (client)</li>
+  <li>proxychains</li>
+  <li>python3</li>
+</ul>
+
+<h3 id="setting-up-the-subnets">Setting up the subnets</h3>
+
+<p>Use the default bridge network (typically <code class="language-plaintext highlighter-rouge">172.17.0.0/16</code>) provided by docker-engine as the data center network. To create the enterprise network subnet, run the following docker command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker network create enterprise <span class="nt">--subnet</span> 10.10.10.0/24
+</code></pre></div></div>
+
+<p>The penetration testing machine automatically gets the IP address <code class="language-plaintext highlighter-rouge">172.17.0.1</code> when the docker engine is live (at the interface <code class="language-plaintext highlighter-rouge">docker0</code>. It is the gateway for containers to talk to the internet).</p>
+
+<h3 id="setting-up-the-nodes---modifying-the-default-ssh-server-docker-image">Setting up the nodes - modifying the default ssh server docker image</h3>
+
+<p>To create a docker container with sshd service turned on, we shall use the <code class="language-plaintext highlighter-rouge">linuxserver/openssh-server</code> docker image, with slight modification in <code class="language-plaintext highlighter-rouge">sshd_config</code>. Create a new file by the name <code class="language-plaintext highlighter-rouge">Dockerfile</code> and fill in with the following content.</p>
+
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">FROM</span><span class="s"> linuxserver/openssh-server</span>
+<span class="k">ADD</span><span class="s"> sshd_config /etc/ssh/sshd_config</span>
+</code></pre></div></div>
+
+<p>Then create a file by the name <code class="language-plaintext highlighter-rouge">sshd_config</code> (which will be used to replace the original configuration in the <code class="language-plaintext highlighter-rouge">linuxserver/openssh-server</code> docker image), and fill in with the following content.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># ....
+AuthorizedKeysFile	.ssh/authorized_keys
+
+# ...
+PasswordAuthentication yes
+
+# ...
+AllowTcpForwarding yes
+GatewayPorts no
+X11Forwarding no
+PidFile /config/sshd.pid
+
+# ...
+Subsystem	sftp	/usr/lib/ssh/sftp-server
+
+# ...
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">sshd_config</code> is a mere stripped replica of the SSHd configuration file of the <code class="language-plaintext highlighter-rouge">linuxserver/openssh-server</code> docker image, with the following changes.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">PasswordAuthentication yes</code></li>
+  <li><code class="language-plaintext highlighter-rouge">AllowTcpForwarding yes</code></li>
+</ul>
+
+<p>Then, build the docker image by running the following command.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker build <span class="nt">-t</span> sshserver:latest <span class="nb">.</span>
+</code></pre></div></div>
+
+<h3 id="setting-up-the-nodes---the-bastion-server">Setting up the nodes - the bastion server</h3>
+
+<p>Now, that we have the SSH server docker image baked, run the following command to spin up a bastion server as a container in the default bridge network.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="nt">-e</span> <span class="nv">SUDO_ACCESS</span><span class="o">=</span><span class="nb">true</span> <span class="se">\</span>
+    <span class="nt">-e</span> <span class="nv">USER_NAME</span><span class="o">=</span>bastion <span class="nt">-e</span> <span class="nv">USER_PASSWORD</span><span class="o">=</span>fortwall <span class="se">\</span>
+    <span class="nt">-e</span> <span class="nv">PASSWORD_ACCESS</span><span class="o">=</span><span class="nb">true</span> <span class="se">\</span>
+    <span class="nt">--name</span> bastion sshserver:latest
+</code></pre></div></div>
+
+<p>To create a secondary interface for the bastion server, run the following command.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker network connect enterprise bastion
+</code></pre></div></div>
+
+<p>After the setup, the bastion server’s network configuration looks similar to the following:</p>
+
+<p><img src="/assets/img/pivoting/bastion-config.png" alt="Bastion configuration" /></p>
+
+<h3 id="setting-up-the-nodes---internal-server">Setting up the nodes - internal server</h3>
+
+<p>To spin up the internal server as a container, run the following docker command.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="nt">-e</span> <span class="nv">SUDO_ACCESS</span><span class="o">=</span><span class="nb">true</span> <span class="se">\</span>
+    <span class="nt">-e</span> <span class="nv">USER_NAME</span><span class="o">=</span>admin <span class="nt">-e</span> <span class="nv">USER_PASSWORD</span><span class="o">=</span>homeportal <span class="se">\</span>
+    <span class="nt">-e</span> <span class="nv">PASSWORD_ACCESS</span><span class="o">=</span><span class="nb">true</span> <span class="se">\</span>
+    <span class="nt">--name</span> internal_server <span class="se">\</span>
+    <span class="nt">--network</span> enterprise sshserver:latest
+</code></pre></div></div>
+
+<p>After the setup, the internal server’s network configuration looks similar to the following:</p>
+
+<p><img src="/assets/img/pivoting/internal-config.png" alt="Internal node configuration" /></p>
+
+<blockquote>
+  <p>The <code class="language-plaintext highlighter-rouge">eth0</code> interface IP of the bastion server may not be <code class="language-plaintext highlighter-rouge">172.17.0.2</code> if there are other containers running in your machine. The IP address that the bastion server obtains needs to be noted down and used in place of <code class="language-plaintext highlighter-rouge">172.17.0.2</code> everywhere during the attack.</p>
+</blockquote>
+
+<h3 id="its-not-over-yet">It’s not over yet</h3>
+
+<p>In the <a href="/2020/08/10/gain-access-to-an-internal-machine-using-port-forwarding-penetration-testing.html">following article</a>, we shall learn port forwarding by performing the penetration test.</p>
+
+  </div>
+
+
+  <a href="/blogs">&lt; To Blog home</a><a class="u-url" href="/2020/08/09/gain-access-to-an-internal-machine-using-port-forwarding-setup-experiment-environment.html" hidden></a>
 </article>
 
       </div>

@@ -37,13 +37,15 @@
 </header>
 <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+        <a href="/blogs">&lt; To Blog home</a>
+
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
     <h1 class="post-title p-name" itemprop="name headline">Using GNS3 to learn SDN</h1>
     <p>
       
-        <code>intermediate</code>, <code>sdn</code>, <code>cloud</code>, <code>networking</code>
+        <code>intermediate</code> <code>application</code> <code>sdn</code> <code>cloud</code> <code>networking</code>
       
     </p>
     <p class="post-meta">
@@ -54,7 +56,7 @@
   <div class="post-content e-content" itemprop="articleBody">
     <p><a href="https://www.gns3.com/">GNS3</a> is a network simulation platform for creating and testing virtual networks with routers, switches, and other devices. There are many other alternatives to GNS3, but I personally prefer GNS3 since the UI is user friendly, supports multiple types of network devices and protocols and more importantly has integrations with Docker, VirtualBox and VMware.</p>
 
-<p>In one of my previous blog articles, I presented a brief and elementary introduction about Software Defined Networks. In this blog article, we shall walk through setting up GNS3, and further implement a simple controller using RYU framework on a network of SDN switches in GNS3.</p>
+<p>In one of my <a href="/2023/03/10/software-defined-networks-101.html">previous blog articles</a>, I presented a brief and elementary introduction about Software Defined Networks. In this blog article, we shall walk through setting up GNS3, and further implement a simple controller using RYU framework on a network of SDN switches in GNS3.</p>
 
 <h2 id="setup">Setup</h2>
 
@@ -70,10 +72,10 @@
 
 <ul>
   <li>On the left vertical navigation bar, select one of the icons to open a drawer showcasing list of available devices. On the bottom of this drawer, click on the button that says “New template”.</li>
-  <li>A new window with the title “New template” opens. Select “Install an appliance from the GNS3 server (recommended)” option (It is selected by default) and click “Next &gt;” on the bottom corner of the window.
-Click on “Update from online registry” to fill the appliances list.
-Once the appliance list is filled, find and click “Open vSwitch” under the “Switches” accordion as illustrated in Figure 1. Then click on “Install” found in the bottom corner of the window.
-For simplicity, use the default settings for the rest of the installation process.</li>
+  <li>A new window with the title “New template” opens. Select “Install an appliance from the GNS3 server (recommended)” option (It is selected by default) and click “Next &gt;” on the bottom corner of the window.</li>
+  <li>Click on “Update from online registry” to fill the appliances list.</li>
+  <li>Once the appliance list is filled, find and click “Open vSwitch” under the “Switches” accordion as illustrated in Figure 1. Then click on “Install” found in the bottom corner of the window.</li>
+  <li>For simplicity, use the default settings for the rest of the installation process.</li>
 </ul>
 
 <p><img src="/assets/img/gns-sdn/fig1.png" alt="Figure 1: Filled appliance list (As of Mar 11, 2023)" />
@@ -84,22 +86,26 @@ For simplicity, use the default settings for the rest of the installation proces
 <p>RYU is going to be set up on your host machine (or, in the gns3 server if you are using one). This section shows how to setup RYU in a linux or *nix based machine.</p>
 
 <ul>
-  <li>Assuming that you have python3 , pip3, and virtualenv installed in your host machine, create a virtual environment by running the following command: virtualenv venv</li>
-  <li>Activate the created virtual environment by running: source ./venv/bin/activate</li>
-  <li>Install ryu for this environment by running: pip install ryu</li>
+  <li>Assuming that you have <code class="language-plaintext highlighter-rouge">python3</code> , <code class="language-plaintext highlighter-rouge">pip3</code>, and <code class="language-plaintext highlighter-rouge">virtualenv</code> installed in your host machine, create a virtual environment by running the following command: <code class="language-plaintext highlighter-rouge">virtualenv venv</code></li>
+  <li>Activate the created virtual environment by running: <code class="language-plaintext highlighter-rouge">source ./venv/bin/activate</code></li>
+  <li>Install ryu for this environment by running: <code class="language-plaintext highlighter-rouge">pip install ryu</code></li>
 </ul>
 
-<p><em>NOTE: Before moving forward ensure that ryu is correctly installed and is working by running ryu-manager in a terminal with venv active.</em></p>
+<blockquote>
+  <p><strong>NOTE</strong>: Before moving forward ensure that ryu is correctly installed and is working by running <code class="language-plaintext highlighter-rouge">ryu-manager</code> in a terminal with <code class="language-plaintext highlighter-rouge">venv</code> active.</p>
+</blockquote>
 
 <h2 id="simple-experiment">Simple Experiment</h2>
 
-<p>In this experiment, a network containing a single Open vSwitch will be used. The Open vSwitch will be connected to the controller (host machine) through a NAT at eth0. Two host computers will connect to the switch at eth1 and eth2. The goal is to enable communication between the two hosts through the switch.</p>
+<p>In this experiment, a network containing a single Open vSwitch will be used. The Open vSwitch will be connected to the controller (host machine) through a NAT at <code class="language-plaintext highlighter-rouge">eth0</code>. Two host computers will connect to the switch at <code class="language-plaintext highlighter-rouge">eth1</code> and <code class="language-plaintext highlighter-rouge">eth2</code>. The goal is to enable communication between the two hosts through the switch.</p>
 
 <h3 id="configure-open-vswitch">Configure Open vSwitch</h3>
 
-<p>Figure 2 illustrates the network topology used for this experiment. Before starting up the Open vSwitch node, right click on the node to “edit config”. Uncomment the section under # DHCP config for eth0 . By this configuration, the switch’s eth0 interface will obtain IP address and other details from the DHCP server which is NAT1 in this case.</p>
+<p>Figure 2 illustrates the network topology used for this experiment. Before starting up the Open vSwitch node, right click on the node to “edit config”. Uncomment the section under <code class="language-plaintext highlighter-rouge"># DHCP config for eth0</code> . By this configuration, the switch’s <code class="language-plaintext highlighter-rouge">eth0</code> interface will obtain IP address and other details from the DHCP server which is <code class="language-plaintext highlighter-rouge">NAT1</code> in this case.</p>
 
-<p><em>Recall: Other details?</em></p>
+<blockquote>
+  <p>Recall: Other details?</p>
+</blockquote>
 
 <p><img src="/assets/img/gns-sdn/fig2.png" alt="Figure 2: Network topology and OVS configuration" />
 <br /><small>Figure 2: Network topology and OVS configuration</small><br /></p>
@@ -109,7 +115,9 @@ For simplicity, use the default settings for the rest of the installation proces
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># Set controller IP</span>
 ovs-vsctl set-controller br0 tcp:192.168.122.1:6633</code></pre></figure>
 
-<p><em>Ensure that the IP address used in the above command is in fact the IP address of one of the interfaces on your host machine where GNS3 server is installed.</em></p>
+<blockquote>
+  <p>Ensure that the IP address used in the above command is in fact the IP address of one of the interfaces on your host machine where GNS3 server is installed.</p>
+</blockquote>
 
 <h3 id="configure-the-pcs">Configure the PCs</h3>
 
@@ -188,8 +196,9 @@ ip 10.0.0.11/24 10.0.0.1</code></pre></figure>
 
 <h2 id="explanation">Explanation</h2>
 
-<p>RYU is built on an event-based framework. The above code responds to two events: <code class="language-plaintext highlighter-rouge">SwitchFeatures</code> and <code class="language-plaintext highlighter-rouge">PacketIn</code> events. The <code class="language-plaintext highlighter-rouge">SwitchFeatures</code> event is triggered by the switch when it registers itself with the controller. The <code class="language-plaintext highlighter-rouge">PacketIn</code> event is triggered by the switch when it sees a packet that does not match any flow rule but the fallback rule. The fallback rule is set during the registration phase of the switch (as implemented in <code class="language-plaintext highlighter-rouge">switch_features_handler</code> function). While, for each packet flowing in the data plane the <code class="language-plaintext highlighter-rouge">packet_in_handler</code> function is called. The controller instructs the switch to broadcast the packet (as <code class="language-plaintext highlighter-rouge">actions</code> variable in <code class="language-plaintext highlighter-rouge">packet_in_handler</code> function) to all the ports other than the port in which the packet was received i.e. <code class="language-plaintext highlighter-rouge">in_port</code> .
-Verification</p>
+<p>RYU is built on an event-based framework. The above code responds to two events: <code class="language-plaintext highlighter-rouge">SwitchFeatures</code> and <code class="language-plaintext highlighter-rouge">PacketIn</code> events. The <code class="language-plaintext highlighter-rouge">SwitchFeatures</code> event is triggered by the switch when it registers itself with the controller. The <code class="language-plaintext highlighter-rouge">PacketIn</code> event is triggered by the switch when it sees a packet that does not match any flow rule but the fallback rule. The fallback rule is set during the registration phase of the switch (as implemented in <code class="language-plaintext highlighter-rouge">switch_features_handler</code> function). While, for each packet flowing in the data plane the <code class="language-plaintext highlighter-rouge">packet_in_handler</code> function is called. The controller instructs the switch to broadcast the packet (as <code class="language-plaintext highlighter-rouge">actions</code> variable in <code class="language-plaintext highlighter-rouge">packet_in_handler</code> function) to all the ports other than the port in which the packet was received i.e. <code class="language-plaintext highlighter-rouge">in_port</code></p>
+
+<h2 id="verification">Verification</h2>
 
 <p>Now, ping <code class="language-plaintext highlighter-rouge">PC2</code> from <code class="language-plaintext highlighter-rouge">PC1</code> and vice-versa. Observe that the two hosts are able to communicate with each other, as shown in Figure 5 (Unlike shown in Figure 2).</p>
 
@@ -198,7 +207,9 @@ Verification</p>
 
 <p>Further, in the GNS3 UI right click on the link connecting the NAT and the Open vSwitch, and select capture packets. Then, run ping from one of the PCs to the other PC. Observe that there are OpenFlow packets surrounding the ICMP request and reply packets that makes the communication between PCs possible.</p>
 
-<p><em>Think: Why does the link connecting NAT and Open vSwitch see ICMP packets between the two PCs?</em></p>
+<blockquote>
+  <p>Think: Why does the link connecting NAT and Open vSwitch see ICMP packets between the two PCs?</p>
+</blockquote>
 
 <p><img src="/assets/img/gns-sdn/fig6.png" alt="Figure 6: Snippet of wireshark packet capture" />
 <br /><small>Figure 6: Snippet of wireshark packet capture</small><br /></p>
@@ -212,7 +223,10 @@ Verification</p>
 
 <p>The controller code used here performs no more than the job of a network hub. I would strongly suggest you to learn how to develop a controller that performs L2 switching. Further, learn how to develop a controller that performs L3 switching. What about a controller that manages a cluster of switches performing L2 and L3 switching?</p>
 
-  </div><a class="u-url" href="/2023/03/10/using-gns3-to-learn-sdn.html" hidden></a>
+  </div>
+
+
+  <a href="/blogs">&lt; To Blog home</a><a class="u-url" href="/2023/03/10/using-gns3-to-learn-sdn.html" hidden></a>
 </article>
 
       </div>

