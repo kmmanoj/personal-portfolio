@@ -22,7 +22,7 @@ title: Manoj Vignesh K M
 description: >- # this means to ignore newlines until "baseurl:"
   Manoj's articulated knowledge base of cybersecurity research
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://kmmanoj.me" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://www.kmmanoj.me" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: kmmanojv96
 linkedin_username: kmmanoj
 
