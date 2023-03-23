@@ -52,7 +52,7 @@ Figure 2 illustrates the network topology used for this experiment. Before start
 > Recall: Other details?
 
 ![Figure 2: Network topology and OVS configuration](/assets/img/gns-sdn/fig2.png)
-<br/><small>Figure 2: Network topology and OVS configuration</small><br/>
+<br/><small style="color: gray">Figure 2: Network topology and OVS configuration</small><br/>
 
 Then, start the Open vSwitch node and spawn an Auxiliary console. In the console, enter the following command to instruct the switch to use the specified controller for the specified bridge.
 
@@ -80,7 +80,7 @@ ip 10.0.0.11/24 10.0.0.1
 Verify that the two PCs are not be able to ping each other.
 
 ![Figure 3: The PCs will not be able to ping each other](/assets/img/gns-sdn/fig3.png)
-<br/><small>Figure 3: The PCs will not be able to ping each other</small><br/>
+<br/><small style="color: gray">Figure 3: The PCs will not be able to ping each other</small><br/>
 
 ### Configure the controller
 
@@ -143,7 +143,7 @@ Then, to start the controller process run the following command in the host mach
 
 
 ![Figure 4: RYU controller process and its logs](/assets/img/gns-sdn/fig4.png)
-<br/><small>Figure 4: RYU controller process and its logs</small><br/>
+<br/><small style="color: gray">Figure 4: RYU controller process and its logs</small><br/>
 
 ## Explanation
 
@@ -154,7 +154,7 @@ RYU is built on an event-based framework. The above code responds to two events:
 Now, ping `PC2` from `PC1` and vice-versa. Observe that the two hosts are able to communicate with each other, as shown in Figure 5 (Unlike shown in Figure 2).
 
 ![Figure 5: The PCs will be able to ping each other](/assets/img/gns-sdn/fig5.png)
-<br/><small>Figure 5: The PCs will be able to ping each other</small><br/>
+<br/><small style="color: gray">Figure 5: The PCs will be able to ping each other</small><br/>
 
 
 Further, in the GNS3 UI right click on the link connecting the NAT and the Open vSwitch, and select capture packets. Then, run ping from one of the PCs to the other PC. Observe that there are OpenFlow packets surrounding the ICMP request and reply packets that makes the communication between PCs possible.
@@ -162,7 +162,7 @@ Further, in the GNS3 UI right click on the link connecting the NAT and the Open 
 > Think: Why does the link connecting NAT and Open vSwitch see ICMP packets between the two PCs?
 
 ![Figure 6: Snippet of wireshark packet capture](/assets/img/gns-sdn/fig6.png)
-<br/><small>Figure 6: Snippet of wireshark packet capture</small><br/>
+<br/><small style="color: gray">Figure 6: Snippet of wireshark packet capture</small><br/>
 
 ## Conclusion
 
@@ -170,7 +170,7 @@ The above blog article demonstrates the usage of GNS3 to setup, build and simula
 
 
 ![Figure 7: Topology idea for multiple Open vSwitches](/assets/img/gns-sdn/fig7.png)
-<br/><small>Figure 7: Topology idea for multiple Open vSwitches</small><br/>
+<br/><small style="color: gray">Figure 7: Topology idea for multiple Open vSwitches</small><br/>
 
 
 The controller code used here performs no more than the job of a network hub. I would strongly suggest you to learn how to develop a controller that performs L2 switching. Further, learn how to develop a controller that performs L3 switching. What about a controller that manages a cluster of switches performing L2 and L3 switching?

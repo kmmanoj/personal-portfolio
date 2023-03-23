@@ -19,7 +19,15 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-03-10T23:00:00-05:00","datePublished":"2023-03-10T23:00:00-05:00","description":"Setup and configure your GNS3 with required elements to learn, develop and test Software Defined Networks.","headline":"Using GNS3 to learn SDN","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.kmmanoj.me/2023/03/10/using-gns3-to-learn-sdn.html"},"url":"https://www.kmmanoj.me/2023/03/10/using-gns3-to-learn-sdn.html"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://www.kmmanoj.me/feed.xml" title="Manoj Vignesh K M" />
+<link rel="stylesheet" href="/assets/main.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet"> 
+  <style>
+    body {
+      font-family: 'Ubuntu', sans-serif;
+    }
+  </style><link type="application/atom+xml" rel="alternate" href="https://www.kmmanoj.me/feed.xml" title="Manoj Vignesh K M" />
     
 
 
@@ -172,7 +180,7 @@
 </blockquote>
 
 <p><img src="/assets/img/gns-sdn/fig2.png" alt="Figure 2: Network topology and OVS configuration" />
-<br /><small>Figure 2: Network topology and OVS configuration</small><br /></p>
+<br /><small style="color: gray">Figure 2: Network topology and OVS configuration</small><br /></p>
 
 <p>Then, start the Open vSwitch node and spawn an Auxiliary console. In the console, enter the following command to instruct the switch to use the specified controller for the specified bridge.</p>
 
@@ -196,7 +204,7 @@ ip 10.0.0.11/24 10.0.0.1</code></pre></figure>
 <p>Verify that the two PCs are not be able to ping each other.</p>
 
 <p><img src="/assets/img/gns-sdn/fig3.png" alt="Figure 3: The PCs will not be able to ping each other" />
-<br /><small>Figure 3: The PCs will not be able to ping each other</small><br /></p>
+<br /><small style="color: gray">Figure 3: The PCs will not be able to ping each other</small><br /></p>
 
 <h3 id="configure-the-controller">Configure the controller</h3>
 
@@ -256,7 +264,7 @@ ip 10.0.0.11/24 10.0.0.1</code></pre></figure>
 <p>Then, to start the controller process run the following command in the host machine in the terminal where <code class="language-plaintext highlighter-rouge">venv</code> is active: <code class="language-plaintext highlighter-rouge">ryu-manager --verbose controller.py</code> . The logs in the terminal should indicate that the switch registered itself with the controller and is receiving <code class="language-plaintext highlighter-rouge">PacketIn</code> events from the switch.</p>
 
 <p><img src="/assets/img/gns-sdn/fig4.png" alt="Figure 4: RYU controller process and its logs" />
-<br /><small>Figure 4: RYU controller process and its logs</small><br /></p>
+<br /><small style="color: gray">Figure 4: RYU controller process and its logs</small><br /></p>
 
 <h2 id="explanation">Explanation</h2>
 
@@ -267,7 +275,7 @@ ip 10.0.0.11/24 10.0.0.1</code></pre></figure>
 <p>Now, ping <code class="language-plaintext highlighter-rouge">PC2</code> from <code class="language-plaintext highlighter-rouge">PC1</code> and vice-versa. Observe that the two hosts are able to communicate with each other, as shown in Figure 5 (Unlike shown in Figure 2).</p>
 
 <p><img src="/assets/img/gns-sdn/fig5.png" alt="Figure 5: The PCs will be able to ping each other" />
-<br /><small>Figure 5: The PCs will be able to ping each other</small><br /></p>
+<br /><small style="color: gray">Figure 5: The PCs will be able to ping each other</small><br /></p>
 
 <p>Further, in the GNS3 UI right click on the link connecting the NAT and the Open vSwitch, and select capture packets. Then, run ping from one of the PCs to the other PC. Observe that there are OpenFlow packets surrounding the ICMP request and reply packets that makes the communication between PCs possible.</p>
 
@@ -276,14 +284,14 @@ ip 10.0.0.11/24 10.0.0.1</code></pre></figure>
 </blockquote>
 
 <p><img src="/assets/img/gns-sdn/fig6.png" alt="Figure 6: Snippet of wireshark packet capture" />
-<br /><small>Figure 6: Snippet of wireshark packet capture</small><br /></p>
+<br /><small style="color: gray">Figure 6: Snippet of wireshark packet capture</small><br /></p>
 
 <h2 id="conclusion">Conclusion</h2>
 
 <p>The above blog article demonstrates the usage of GNS3 to setup, build and simulate SDN networks. To build a multi-switch topology one could use a standard ethernet switch to connect the NAT to all the Open vSwitches, as shown in Figure 7.</p>
 
 <p><img src="/assets/img/gns-sdn/fig7.png" alt="Figure 7: Topology idea for multiple Open vSwitches" />
-<br /><small>Figure 7: Topology idea for multiple Open vSwitches</small><br /></p>
+<br /><small style="color: gray">Figure 7: Topology idea for multiple Open vSwitches</small><br /></p>
 
 <p>The controller code used here performs no more than the job of a network hub. I would strongly suggest you to learn how to develop a controller that performs L2 switching. Further, learn how to develop a controller that performs L3 switching. What about a controller that manages a cluster of switches performing L2 and L3 switching?</p>
 
