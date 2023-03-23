@@ -1,6 +1,6 @@
 ---
-layout: blog_page
+layout: featured_blogs
 title: Blogs
-list_title: Blog Articles
+list_title: Featured Blog Articles
 permalink: /blogs/
 ---

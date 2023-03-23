@@ -2,7 +2,7 @@
 layout: post
 title:  "Using GNS3 to learn SDN"
 date:   2023-03-11 00:00:00 -0400
-tags: [intermediate, application, sdn, cloud, networking]
+tags: intermediate application sdn cloud networking featured
 excerpt: Setup and configure your GNS3 with required elements to learn, develop and test Software Defined Networks.
 ---
 

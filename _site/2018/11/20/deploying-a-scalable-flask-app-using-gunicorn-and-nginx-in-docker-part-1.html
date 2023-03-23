@@ -19,7 +19,15 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2018-11-20T23:00:00-05:00","datePublished":"2018-11-20T23:00:00-05:00","description":"Manoj’s articulated knowledge base of cybersecurity research","headline":"Deploying a scalable flask app using Gunicorn and Nginx, in Docker: Part #1","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.kmmanoj.me/2018/11/20/deploying-a-scalable-flask-app-using-gunicorn-and-nginx-in-docker-part-1.html"},"url":"https://www.kmmanoj.me/2018/11/20/deploying-a-scalable-flask-app-using-gunicorn-and-nginx-in-docker-part-1.html"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://www.kmmanoj.me/feed.xml" title="Manoj Vignesh K M" /></head>
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://www.kmmanoj.me/feed.xml" title="Manoj Vignesh K M" />
+    
+
+
+
+
+
+  
+</head>
 <body><header class="site-header" role="banner">
 
   <div class="wrapper"><a class="site-title" rel="author" href="/">Manoj Vignesh K M</a><nav class="site-nav">
@@ -32,7 +40,47 @@
           </span>
         </label>
 
-        <div class="trigger"><a class="page-link" href="/profession/">Profession</a><a class="page-link" href="/blogs/">Blogs</a></div>
+        <div class="trigger">
+                <!-- pass -->
+              
+                <!-- pass -->
+              
+                <a class="page-link" href="/experience/">Experience</a>
+              
+                <!-- pass -->
+              
+                <!-- pass -->
+              
+                <!-- pass -->
+              
+                <!-- pass -->
+              
+                <a class="page-link" href="/blogs/">Blogs</a>
+              
+              <!-- pass -->
+              
+                <!-- pass -->
+              
+                <!-- pass -->
+              
+                <!-- pass -->
+              
+                <!-- pass -->
+              
+                <!-- pass -->
+              
+                <!-- pass -->
+              
+                <!-- pass -->
+              
+                <!-- pass -->
+              
+                <!-- pass -->
+              
+                <!-- pass -->
+              
+                <!-- pass -->
+              </div>
       </nav></div>
 </header>
 <main class="page-content" aria-label="Content">
@@ -43,11 +91,18 @@
 
   <header class="post-header">
     <h1 class="post-title p-name" itemprop="name headline">Deploying a scalable flask app using Gunicorn and Nginx, in Docker: Part #1</h1>
-    <p>
+    <span>
       
-        <code>beginner</code> <code>application</code> <code>software engineering</code>
+        
+        <a href="/tag/beginner"><code class="highligher-rouge"><nobr>beginner</nobr></code>&nbsp;</a>
       
-    </p>
+        
+        <a href="/tag/application"><code class="highligher-rouge"><nobr>application</nobr></code>&nbsp;</a>
+      
+        
+        <a href="/tag/software-engineering"><code class="highligher-rouge"><nobr>software-engineering</nobr></code>&nbsp;</a>
+      
+    </span>
     <p class="post-meta">
       <time class="dt-published" datetime="2018-11-20T23:00:00-05:00" itemprop="datePublished">Nov 20, 2018
       </time></p>
@@ -88,10 +143,10 @@
 <div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
 <span class="nt">&lt;html&gt;</span>
     <span class="nt">&lt;head&gt;</span>
-        <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">""</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"{{ url_for('static', filename='css/styles.css') }}"</span> <span class="nt">/&gt;</span>
     <span class="nt">&lt;/head&gt;</span>
     <span class="nt">&lt;body&gt;</span>
-        <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">""</span><span class="nt">&gt;&lt;/script&gt;</span>
+        <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"{{ url_for('static', filename='js/index.js') }}"</span><span class="nt">&gt;&lt;/script&gt;</span>
     <span class="nt">&lt;/body&gt;</span>
 <span class="nt">&lt;/html&gt;</span>
 </code></pre></div></div>

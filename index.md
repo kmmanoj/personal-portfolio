@@ -7,4 +7,6 @@ layout: page
 
 # I'm
 
-Manoj Vignesh K M
+Manoj Vignesh K M, a cybersecurity researcher with a provable experience in network security and web application security. I also possess immense experience in building monitoring, alerting and inventory management system for a heterogenous system of network devices. 
+
+Check out my <a href="/blogs">blog articles</a> where I explain claims and concepts by application.

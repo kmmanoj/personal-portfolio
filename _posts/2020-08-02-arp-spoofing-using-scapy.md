@@ -2,7 +2,7 @@
 layout: post
 title:  "ARP Spoofing using Scapy"
 date:   2020-08-02 00:00:00 -0400
-tags: [advanced, application, cybersecurity, networking, arp]
+tags: advanced application cybersecurity networking arp featured
 excerpt: Learn and try out ARP spoofing all by yourself in a Docker network using Scapy!
 ---
 

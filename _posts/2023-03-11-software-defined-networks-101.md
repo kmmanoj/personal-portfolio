@@ -2,7 +2,7 @@
 layout: post
 title:  "Software Defined Networks 101"
 date:   2023-03-11 00:00:00 -0400
-tags: [beginner, concept, sdn, cloud, networking]
+tags: beginner concept sdn cloud networking
 excerpt: A (very) brief introduction about Software Defined Networks
 ---
 

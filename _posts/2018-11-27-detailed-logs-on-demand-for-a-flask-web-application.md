@@ -2,7 +2,7 @@
 layout: post
 title:  "\"Detailed logs on demand\" for a flask web application"
 date:   2018-11-27 00:00:00 -0400
-tags: [intermediate, application, software engineering]
+tags: intermediate application software-engineering
 excerpt: How about viewing detailed logs of only a particular component of a huge system in realtime?
 ---
 

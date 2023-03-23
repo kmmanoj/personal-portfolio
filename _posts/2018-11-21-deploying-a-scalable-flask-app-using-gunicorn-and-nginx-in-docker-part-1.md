@@ -2,7 +2,7 @@
 layout: post
 title:  "Deploying a scalable flask app using Gunicorn and Nginx, in Docker: Part #1"
 date:   2018-11-21 00:00:00 -0400
-tags: [beginner, application, software engineering]
+tags: beginner application software-engineering
 excerpt: ''
 ---
 
@@ -42,10 +42,10 @@ The above code assumes that there is a template named `index.html`. Let's prove 
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+        <link rel="stylesheet" href="{% raw %}{{ url_for('static', filename='css/styles.css') }}{% endraw %}" />
     </head>
     <body>
-        <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+        <script src="{% raw %}{{ url_for('static', filename='js/index.js') }}{% endraw %}"></script>
     </body>
 </html>
 ```

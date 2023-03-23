@@ -6,10 +6,12 @@ layout: default
 
   {{ content }}
 
+  <a style="float: right" href="/all-blogs">Show All Blogs</a>
+
   {%- if site.posts.size > 0 -%}
     <h2 class="post-list-heading">{{ page.list_title | default: "Posts" }}</h2>
     <ul class="post-list">
-      {%- for post in site.posts -%}
+      {%- for post in site.tags["featured"] -%}
       <li>
         {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
         <span class="post-meta">{{ post.date | date: date_format }}</span>
@@ -18,16 +20,23 @@ layout: default
             {{ post.title | escape }}
           </a>
         </h3>
-        {%- if site.show_excerpts && post.excerpt -%}
+        {%- if site.show_excerpts -%}
           {{ post.excerpt }}<br/>
         {%- endif -%}
         {% if post.tags.size > 0 %}
-          <code>{{ post.tags | join: "</code> <code>" }}</code>
+          <span>
+            {% for tag in post.tags %}
+              {% capture tag_name %}{{ tag }}{% endcapture %}
+              <a href="/tag/{{ tag_name }}"><code class="highligher-rouge"><nobr>{{ tag_name }}</nobr></code>&nbsp;</a>
+            {% endfor %}
+          </span>
         {% endif %}
       </li>
       <hr style="margin: 5px 5px; color: #eee"/>
       {%- endfor -%}
     </ul>
   {%- endif -%}
+
+  {% include alltags.html %}
 
 </div>
