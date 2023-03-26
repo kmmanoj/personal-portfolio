@@ -144,7 +144,7 @@
 
 <p>Create a directory in the base directory by the name <code class="language-plaintext highlighter-rouge">node00</code>:</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="si">$(</span><span class="nb">pwd</span><span class="si">)</span>/node00
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> /rootnet/node00
 </code></pre></div></div>
 
 <h2 id="create-the-first-account">Create the first account</h2>
@@ -158,7 +158,7 @@
 
 <p>To create an account, run:</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>geth <span class="nt">--datadir</span> <span class="si">$(</span><span class="nb">pwd</span><span class="si">)</span>/node00 account new
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>geth <span class="nt">--datadir</span> /rootnet/node00 account new
 </code></pre></div></div>
 
 <p>Note down the address of the account displayed.</p>
@@ -197,7 +197,7 @@
 
 <p>Initialise the ethereum blockchain by running geth and feeding it with the genesis block.</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>geth <span class="nt">--datadir</span> <span class="si">$(</span><span class="nb">pwd</span><span class="si">)</span>/node00 init <span class="si">$(</span><span class="nb">pwd</span><span class="si">)</span>/genesis.json
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>geth <span class="nt">--datadir</span> /rootnet/node00 init /rootnet/genesis.json
 </code></pre></div></div>
 
 <h2 id="optional-ethereum-network-stats-dashboard">[Optional] Ethereum network stats dashboard</h2>

@@ -25,7 +25,7 @@ An ethereum blockchain node is any system that has a storage and is able to perf
 Create a directory in the base directory by the name `node00`:
 
 ```bash
-mkdir $(pwd)/node00
+mkdir /rootnet/node00
 ```
 
 ## Create the first account
@@ -41,7 +41,7 @@ While, the private key is kept safe and secret by the account holder.
 To create an account, run:
 
 ```bash
-geth --datadir $(pwd)/node00 account new
+geth --datadir /rootnet/node00 account new
 ```
 
 Note down the address of the account displayed.
@@ -78,7 +78,7 @@ Replace `<Acc1 Addr>` with the address of the account created in the previous st
 Initialise the ethereum blockchain by running geth and feeding it with the genesis block.
 
 ```bash
-geth --datadir $(pwd)/node00 init $(pwd)/genesis.json
+geth --datadir /rootnet/node00 init /rootnet/genesis.json
 ```
 
 ## [Optional] Ethereum network stats dashboard

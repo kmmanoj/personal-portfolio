@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="https://www.kmmanoj.me/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.kmmanoj.me/" rel="alternate" type="text/html" /><updated>2023-03-26T00:56:47-04:00</updated><id>https://www.kmmanoj.me/feed.xml</id><title type="html">Manoj Vignesh K M</title><subtitle>Manoj&apos;s articulated knowledge base of cybersecurity research</subtitle><entry><title type="html">Setting up a local ethereum blockchain network</title><link href="https://www.kmmanoj.me/2023/03/25/setting-up-a-local-ethereum-blockchain-network.html" rel="alternate" type="text/html" title="Setting up a local ethereum blockchain network" /><published>2023-03-25T00:00:00-04:00</published><updated>2023-03-25T00:00:00-04:00</updated><id>https://www.kmmanoj.me/2023/03/25/setting-up-a-local-ethereum-blockchain-network</id><content type="html" xml:base="https://www.kmmanoj.me/2023/03/25/setting-up-a-local-ethereum-blockchain-network.html"><![CDATA[<p>The Ethereum blockchain is similar to the Bitcoin blockchain in that it is a distributed ledger that records all transactions. However, ethereum blockchain provides a platform to build decentralized apps in the form of smart contracts.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="https://www.kmmanoj.me/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.kmmanoj.me/" rel="alternate" type="text/html" /><updated>2023-03-26T00:59:41-04:00</updated><id>https://www.kmmanoj.me/feed.xml</id><title type="html">Manoj Vignesh K M</title><subtitle>Manoj&apos;s articulated knowledge base of cybersecurity research</subtitle><entry><title type="html">Setting up a local ethereum blockchain network</title><link href="https://www.kmmanoj.me/2023/03/25/setting-up-a-local-ethereum-blockchain-network.html" rel="alternate" type="text/html" title="Setting up a local ethereum blockchain network" /><published>2023-03-25T00:00:00-04:00</published><updated>2023-03-25T00:00:00-04:00</updated><id>https://www.kmmanoj.me/2023/03/25/setting-up-a-local-ethereum-blockchain-network</id><content type="html" xml:base="https://www.kmmanoj.me/2023/03/25/setting-up-a-local-ethereum-blockchain-network.html"><![CDATA[<p>The Ethereum blockchain is similar to the Bitcoin blockchain in that it is a distributed ledger that records all transactions. However, ethereum blockchain provides a platform to build decentralized apps in the form of smart contracts.</p>
 
 <p>Given that the ethereum blockchain is a platform to build decentralised applications, it is key to learn this technology as it may revolutionize the way applications are built.</p>
 
@@ -18,7 +18,7 @@
 
 <p>Create a directory in the base directory by the name <code class="language-plaintext highlighter-rouge">node00</code>:</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="si">$(</span><span class="nb">pwd</span><span class="si">)</span>/node00
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> /rootnet/node00
 </code></pre></div></div>
 
 <h2 id="create-the-first-account">Create the first account</h2>
@@ -32,7 +32,7 @@
 
 <p>To create an account, run:</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>geth <span class="nt">--datadir</span> <span class="si">$(</span><span class="nb">pwd</span><span class="si">)</span>/node00 account new
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>geth <span class="nt">--datadir</span> /rootnet/node00 account new
 </code></pre></div></div>
 
 <p>Note down the address of the account displayed.</p>
@@ -71,7 +71,7 @@
 
 <p>Initialise the ethereum blockchain by running geth and feeding it with the genesis block.</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>geth <span class="nt">--datadir</span> <span class="si">$(</span><span class="nb">pwd</span><span class="si">)</span>/node00 init <span class="si">$(</span><span class="nb">pwd</span><span class="si">)</span>/genesis.json
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>geth <span class="nt">--datadir</span> /rootnet/node00 init /rootnet/genesis.json
 </code></pre></div></div>
 
 <h2 id="optional-ethereum-network-stats-dashboard">[Optional] Ethereum network stats dashboard</h2>
