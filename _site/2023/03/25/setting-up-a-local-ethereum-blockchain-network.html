@@ -240,7 +240,13 @@ docker-compose <span class="nt">-f</span> docker-compose-no-build-geth.yml up
 
 <p>Now run the first node</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>geth <span class="nt">--identity</span> <span class="s2">"node00"</span> <span class="nt">--datadir</span><span class="o">=</span>./node00 <span class="nt">--networkid</span><span class="o">=</span>1337 <span class="nt">--syncmode</span><span class="o">=</span>full <span class="nt">--gcmode</span><span class="o">=</span>archive <span class="nt">--http</span> <span class="nt">--http</span>.corsdomain<span class="o">=</span><span class="s2">"*"</span> <span class="nt">--http</span>.api<span class="o">=</span>web3,eth,debug,personal,net,miner,admin <span class="nt">--allow-insecure-unlock</span> <span class="nt">--http</span>.addr <span class="s2">"0.0.0.0"</span> <span class="nt">--http</span>.port 8000 <span class="nt">--authrpc</span>.port 30000 <span class="nt">--port</span> 33000 <span class="nt">--ethstats</span><span class="o">=</span>node00:eth-netstats-password@localhost:3000 <span class="nt">--mine</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>geth <span class="nt">--identity</span> <span class="s2">"node00"</span> <span class="nt">--datadir</span><span class="o">=</span>./node00 <span class="se">\</span>
+    <span class="nt">--networkid</span><span class="o">=</span>1337 <span class="nt">--syncmode</span><span class="o">=</span>full <span class="se">\</span>
+    <span class="nt">--gcmode</span><span class="o">=</span>archive <span class="nt">--http</span> <span class="nt">--http</span>.corsdomain<span class="o">=</span><span class="s2">"*"</span> <span class="se">\</span>
+    <span class="nt">--http</span>.api<span class="o">=</span>web3,eth,debug,personal,net,miner,admin <span class="se">\</span>
+    <span class="nt">--allow-insecure-unlock</span> <span class="nt">--http</span>.addr <span class="s2">"0.0.0.0"</span> <span class="nt">--http</span>.port 8000 <span class="se">\</span>
+    <span class="nt">--authrpc</span>.port 30000 <span class="nt">--port</span> 33000 <span class="se">\</span>
+    <span class="nt">--ethstats</span><span class="o">=</span>node00:eth-netstats-password@localhost:3000 <span class="nt">--mine</span>
 </code></pre></div></div>
 
 <blockquote>
@@ -259,7 +265,14 @@ Started P2P networking self=enode://0123456789abcdef0123456...@127.0.0.1:33000
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
 
-geth <span class="nt">--identity</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="nt">--datadir</span><span class="o">=</span>./<span class="nv">$1</span> <span class="nt">--networkid</span><span class="o">=</span>1337 <span class="nt">--syncmode</span><span class="o">=</span>full <span class="nt">--gcmode</span><span class="o">=</span>archive <span class="nt">--http</span> <span class="nt">--http</span>.corsdomain<span class="o">=</span><span class="s2">"*"</span> <span class="nt">--http</span>.api<span class="o">=</span>web3,eth,debug,personal,net,miner <span class="nt">--allow-insecure-unlock</span> <span class="nt">--bootnodes</span><span class="o">=</span>enode://&lt;the-saved-enode-addr&gt;@127.0.0.1:33000 <span class="nt">--http</span>.port <span class="k">$((</span><span class="m">8000</span><span class="o">+</span><span class="nv">$2</span><span class="k">))</span> <span class="nt">--authrpc</span>.port <span class="k">$((</span><span class="m">30000</span><span class="o">+</span><span class="nv">$2</span><span class="k">))</span> <span class="nt">--port</span> <span class="k">$((</span><span class="m">33000</span><span class="o">+</span><span class="nv">$2</span><span class="k">))</span> <span class="nt">--ethstats</span><span class="o">=</span><span class="nv">$1</span>:eth-netstats-password@localhost:3000 <span class="nt">--mine</span>
+geth <span class="nt">--identity</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="nt">--datadir</span><span class="o">=</span>./<span class="nv">$1</span> <span class="nt">--networkid</span><span class="o">=</span>1337 <span class="se">\</span>
+    <span class="nt">--syncmode</span><span class="o">=</span>full <span class="nt">--gcmode</span><span class="o">=</span>archive <span class="se">\</span>
+    <span class="nt">--http</span> <span class="nt">--http</span>.corsdomain<span class="o">=</span><span class="s2">"*"</span> <span class="nt">--http</span>.api<span class="o">=</span>web3,eth,debug,personal,net,miner <span class="se">\</span>
+    <span class="nt">--allow-insecure-unlock</span> <span class="se">\</span>
+    <span class="nt">--bootnodes</span><span class="o">=</span>enode://&lt;the-saved-enode-addr&gt;@127.0.0.1:33000 <span class="se">\</span>
+    <span class="nt">--http</span>.port <span class="k">$((</span><span class="m">8000</span><span class="o">+</span><span class="nv">$2</span><span class="k">))</span> <span class="nt">--authrpc</span>.port <span class="k">$((</span><span class="m">30000</span><span class="o">+</span><span class="nv">$2</span><span class="k">))</span> <span class="se">\</span>
+    <span class="nt">--port</span> <span class="k">$((</span><span class="m">33000</span><span class="o">+</span><span class="nv">$2</span><span class="k">))</span> <span class="se">\</span>
+    <span class="nt">--ethstats</span><span class="o">=</span><span class="nv">$1</span>:eth-netstats-password@localhost:3000 <span class="nt">--mine</span>
 </code></pre></div></div>
 
 <p>Replace <code class="language-plaintext highlighter-rouge">&lt;the-saved-enode-addr&gt;</code> with the saved enode address.</p>

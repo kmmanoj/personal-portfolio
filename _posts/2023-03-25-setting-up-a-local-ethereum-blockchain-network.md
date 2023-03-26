@@ -124,7 +124,13 @@ The block explorer dashboard should be running at http://localhost:4000
 Now run the first node
 
 ```bash
-geth --identity "node00" --datadir=./node00 --networkid=1337 --syncmode=full --gcmode=archive --http --http.corsdomain="*" --http.api=web3,eth,debug,personal,net,miner,admin --allow-insecure-unlock --http.addr "0.0.0.0" --http.port 8000 --authrpc.port 30000 --port 33000 --ethstats=node00:eth-netstats-password@localhost:3000 --mine
+geth --identity "node00" --datadir=./node00 \
+    --networkid=1337 --syncmode=full \
+    --gcmode=archive --http --http.corsdomain="*" \
+    --http.api=web3,eth,debug,personal,net,miner,admin \
+    --allow-insecure-unlock --http.addr "0.0.0.0" --http.port 8000 \
+    --authrpc.port 30000 --port 33000 \
+    --ethstats=node00:eth-netstats-password@localhost:3000 --mine
 ```
 
 > Remove `--ethstats` option if you skipped step 6
@@ -143,7 +149,14 @@ The other nodes could use `node00` as a peer to learn about the blockchain built
 ```bash
 #!/bin/bash
 
-geth --identity "$1" --datadir=./$1 --networkid=1337 --syncmode=full --gcmode=archive --http --http.corsdomain="*" --http.api=web3,eth,debug,personal,net,miner --allow-insecure-unlock --bootnodes=enode://<the-saved-enode-addr>@127.0.0.1:33000 --http.port $((8000+$2)) --authrpc.port $((30000+$2)) --port $((33000+$2)) --ethstats=$1:eth-netstats-password@localhost:3000 --mine
+geth --identity "$1" --datadir=./$1 --networkid=1337 \
+    --syncmode=full --gcmode=archive \
+    --http --http.corsdomain="*" --http.api=web3,eth,debug,personal,net,miner \
+    --allow-insecure-unlock \
+    --bootnodes=enode://<the-saved-enode-addr>@127.0.0.1:33000 \
+    --http.port $((8000+$2)) --authrpc.port $((30000+$2)) \
+    --port $((33000+$2)) \
+    --ethstats=$1:eth-netstats-password@localhost:3000 --mine
 ```
 
 Replace `<the-saved-enode-addr>` with the saved enode address.
