@@ -1,0 +1,86 @@
+[
+    {
+        "title": "Using GNS3 to learn SDN",
+        "date": "May 2023",
+        "description": "Setup and configure your GNS3 with required elements to learn, develop and test Software Defined Networks.",
+        "url": "https://medium.com/@kmmanoj/what-can-go-wrong-in-a-cryptographic-system-4a60f47a2287",
+        "type": "blog"
+    },
+    {
+        "title": "How complex can authorization get?",
+        "date": "Mar 2022",
+        "description": "Builds on the Authorization component of Identity and Access Management system from zero to how systems are implemented today",
+        "url": "https://medium.com/better-practices/how-complex-can-authorization-get-5011c9dfb0fa",
+        "type": "blog"
+    },
+    {
+        "title": "Introduction to API Security",
+        "date": "Dec 2021",
+        "description": "Learn what is API security and how Postman can be used in automatic security testing of APIs",
+        "url": "https://youtu.be/XlOEq9CBlr8",
+        "type": "video"
+    },
+    {
+        "title": "Man-in-the-middle: A tale of a hoax DHCP server",
+        "date": "Dec 2021",
+        "description": "Learn how a user can act like a hoax DHCP server and situate himself as a man in the middle, and how one can prevent such attacks",
+        "url": "https://blog.kmmanoj.me/man-in-the-middle-a-tale-of-a-hoax-dhcp-server-c3d26f51b308",
+        "type": "blog"
+    },
+    {
+        "title": "How Secure are your APIs?",
+        "date": "Sep 2021",
+        "description": "Learn API security testing in action using Postman",
+        "url": "https://www.youtube.com/watch?v=shT-Obfo-uk",
+        "type": "video"
+    },
+    {
+        "title": "Modelling Trust Frameworks for Network-IDS",
+        "date": "May 2021",
+        "description": "Mathematically modelling human instinctive trust among systems to communicate security based trust reduction and redemption message",
+        "url": "https://doi.org/10.1109/INCET51464.2021.9456381",
+        "type": "research"
+    },
+    {
+        "title": "How I do Machine Learning at work",
+        "date": "Mar 2021",
+        "description": "A method used among group of data scientists to identify and refine feature set for a machine learning problem",
+        "url": "https://blog.kmmanoj.me/how-i-do-machine-learning-at-work-736a107a264f",
+        "type": "blog"
+    },
+    {
+        "title": "Tamper Detection and Correction of ELF Binaries by Remote Parties via via Merkle Trees",
+        "date": "Dec 2020",
+        "description": "Efficiently identifying and patching malicious software using merkle trees before the first execution by the user",
+        "url": "https://doi.org/10.1007/978-3-030-66763-4_14",
+        "type": "research"
+    },
+    {
+        "title": "DHCP starvation attack without making any DHCP requests",
+        "date": "Aug 2020",
+        "description": "Most defense systems filter out repeated DHCP requests. What if you could perform DHCP starvation without sending a DCHP request?",
+        "url": "https://infosecwriteups.com/dhcp-starvation-attack-without-making-any-dhcp-requests-bef0022133c9",
+        "type": "blog"
+    },
+    {
+        "title": "Gain access to an internal machine using Port forwarding: Penetration testing",
+        "date": "Aug 2020",
+        "description": "Set up a penetration testing environment using docker containers in docker networks to learn various types of port forwarding techniques",
+        "url": "https://infosecwriteups.com/gain-access-to-an-internal-machine-using-port-forwarding-penetration-testing-518c0b6a4a0e",
+        "type": "blog"
+    },
+    {
+        "title": "ARP Spoofing using Scapy",
+        "date": "Aug 2020",
+        "description": "Learn and try out ARP spoofing all by yourself in a Docker network using Scapy!",
+        "url": "https://blog.kmmanoj.me/arp-spoofing-using-scapy-92a330cce64b",
+        "type": "blog"
+    },
+    {
+        "title": "Math Behind Euclid's Theorem",
+        "date": "Apr 2020",
+        "description": "Wondered why Euclid's GCD theorem works?",
+        "url": "https://medium.com/swlh/math-behind-euclids-theorem-f8e43ae5e56e",
+        "type": "blog"
+    }
+]

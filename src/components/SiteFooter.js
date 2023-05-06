@@ -1,4 +1,4 @@
-import { Container, Segment, Header, Button, Icon } from "semantic-ui-react";
+import { Container, Segment, Button, Icon } from "semantic-ui-react";
 
 import "semantic-ui-css/semantic.min.css";
 
@@ -22,7 +22,6 @@ export default function SiteFooter() {
     return (
         <Segment size="massive">
             <Container text fluid>
-                <Header as="h3">Manoj Vignesh K M</Header>
                 <Social site="Twitter" handle="kmmanojv96" />
                 <Social site="LinkedIn" handle="kmmanoj" />
             </Container>

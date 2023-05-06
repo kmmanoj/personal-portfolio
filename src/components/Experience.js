@@ -8,7 +8,7 @@ import 'react-vertical-timeline-component/style.min.css';
 function ExperienceItem(props) {
     let description = props.description;
     if(props.description.indexOf(';') !== -1) {
-        description = description.split(';').map((dsc) => <li>{dsc}</li>);
+        description = description.split(';').map((dsc, i) => <li key={i}>{dsc}</li>);
     }
     return (
         <VerticalTimelineElement
@@ -23,7 +23,7 @@ function ExperienceItem(props) {
                 <Header.Subheader>{props.organization}</Header.Subheader>
             </Header>
 
-            <p style={{padding:"10px"}}>
+            <p style={{margin:"10px 30px"}}>
                 {description}
             </p>
         </VerticalTimelineElement>
@@ -38,7 +38,7 @@ export default function Experience() {
                 <Header as="h1">Experience</Header>
                 <a href='./CV.pdf'>Download CV</a>
             </Container>
-            <VerticalTimeline lineColor="black">
+            <VerticalTimeline lineColor="black" layout="1-column-left">
                 {
                     experiences.map(
                         (experience, i) => (
