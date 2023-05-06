@@ -1,0 +1,35 @@
+[
+    {
+        "type": "education",
+        "organization": "Georgia Institute of Technology",
+        "role": "MS in Computer Science",
+        "period": "Aug 2021 - Present",
+        "points": [
+            "Specialisation in Computing Systems",
+            "Teaching Assistant for CS 6211: System Design for Cloud Computing"
+        ]
+    },
+    {
+        "type": "work",
+        "organization": "Postman Inc.",
+        "role": "Security Engineer - 2",
+        "period": "Aug 2021 - Aug 2022",
+        "points": [            
+            "Web Application Penetration testing",
+            "Vendor Assessment",
+            "Threat modeling programme",
+            "Incident Response"
+        ]
+    },
+    {
+        "type": "work",
+        "organization": "Intuit Inc",
+        "role": "Software Engineer",
+        "period": "Aug 2018 - Aug 2021",
+        "points": [
+            "Monitoring, Alerting and Inventory management system for network devices",
+            "NLU powered chatbot to interface with system",
+            "Identity and Access Management: Authorization"
+        ]
+    }
+]

@@ -20,27 +20,11 @@ function Social(props) {
 
 export default function SiteFooter() {
     return (
-        <Segment size="massive" style={{"position": "absolute", "bottom": "0", "width": "100%", "height": "20%"}}>
+        <Segment size="massive">
             <Container text fluid>
-                <Grid divided="vertically">
-                    <Grid.Row columns={2}>
-                        <Grid.Column>
-                            <Header as="h3">Manoj Vignesh K M</Header>
-                            <Social site="Twitter" handle="kmmanojv96" />
-                            <Social site="LinkedIn" handle="kmmanoj" />
-                            {/* <Button color="twitter" as="a" href="https://twitter.com/kmmanojv96" target="_blank">
-                                <Icon name="twitter" /> Twitter
-                            </Button> 
-                            <Button color="linkedin" as="a" href="https://linkedin.com/in/kmmanoj" target="_blank">
-                                <Icon name="linkedin" /> linkedin
-    </Button> */}
-                        </Grid.Column>
-
-                        <Grid.Column>
-                            <div style={{"color": "grey", "textAlign": "right"}}>Web3 enabled</div>
-                        </Grid.Column>
-                    </Grid.Row>
-                </Grid>
+                <Header as="h3">Manoj Vignesh K M</Header>
+                <Social site="Twitter" handle="kmmanojv96" />
+                <Social site="LinkedIn" handle="kmmanoj" />
             </Container>
         </Segment>
     );

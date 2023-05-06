@@ -11,8 +11,8 @@ function ExperienceItem(props) {
                 <List.Description>{props.role} | {props.period}</List.Description>
                 <List.List>
                     {
-                        props.points.map((point) => (
-                                <List.Item>
+                        props.points.map((point, i) => (
+                                <List.Item key={i}>
                                     <List.Content>
                                         <List.Description>- {point}</List.Description>
                                     </List.Content>
@@ -26,16 +26,17 @@ function ExperienceItem(props) {
     )
 }
 
-
 export default function Experience() {
+    let experiences = require('../data/experience.json');
     return (
         <div>
             <Container text textAlign="justified">
                 <Header as="h1">Experience</Header>
                 <a href='./CV.pdf'>Download CV</a>
                 <List>
-                    <ExperienceItem type="education" organization="something" role="nothing" period="asknkad" points={['a', 'b', 'c']} />
-                    <ExperienceItem type="work" organization="something" role="nothing" period="asknkad" points={['a', 'b', 'c']} />
+                    {
+                        experiences.map((experience, i) => <ExperienceItem key={i} {...experience} />)
+                    }
                 </List>
             </Container>
         </div>
