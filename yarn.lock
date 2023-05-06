@@ -3390,6 +3390,11 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
+classnames@^2.2.6:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.2.tgz#351d813bf0137fcc6a76a16b88208d2560a0d924"
+  integrity sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==
+
 clean-css@^5.2.2:
   version "5.3.2"
   resolved "https://registry.npmjs.org/clean-css/-/clean-css-5.3.2.tgz"
@@ -8932,6 +8937,16 @@ react-fast-compare@^3.0.1:
   resolved "https://registry.npmjs.org/react-fast-compare/-/react-fast-compare-3.2.1.tgz"
   integrity sha512-xTYf9zFim2pEif/Fw16dBiXpe0hoy5PxcD8+OwBnTtNLfIm3g6WxhKNurY+6OmdH1u6Ta/W/Vl6vjbYP1MFnDg==
 
+react-icons@^4.8.0:
+  version "4.8.0"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.8.0.tgz#621e900caa23b912f737e41be57f27f6b2bff445"
+  integrity sha512-N6+kOLcihDiAnj5Czu637waJqSnwlMNROzVZMhfX68V/9bu9qHaMIJC4UdozWoOk57gahFCNHwVvWzm0MTzRjg==
+
+react-intersection-observer@^8.26.2:
+  version "8.34.0"
+  resolved "https://registry.yarnpkg.com/react-intersection-observer/-/react-intersection-observer-8.34.0.tgz#6f6e67831c52e6233f6b6cc7eb55814820137c42"
+  integrity sha512-TYKh52Zc0Uptp5/b4N91XydfSGKubEhgZRtcg1rhTKABXijc4Sdr1uTp5lJ8TN27jwUsdXxjHXtHa0kPj704sw==
+
 react-is@^16.13.1, react-is@^16.6.3:
   version "16.13.1"
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
@@ -9014,6 +9029,15 @@ react-scripts@5.0.1:
     workbox-webpack-plugin "^6.4.1"
   optionalDependencies:
     fsevents "^2.3.2"
+
+react-vertical-timeline-component@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/react-vertical-timeline-component/-/react-vertical-timeline-component-3.6.0.tgz#aeb4b56be3f397b493c847df79521f3bfb3aab71"
+  integrity sha512-l9zulqjIGlRuaQeplGzV4r/tG2RYBpYt84Il8w4IxnJze2cDIGI04MKo3F7f1sHT0Sih1ohEFts8UV23AJS15Q==
+  dependencies:
+    classnames "^2.2.6"
+    prop-types "^15.7.2"
+    react-intersection-observer "^8.26.2"
 
 react@^18.2.0:
   version "18.2.0"
