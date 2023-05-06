@@ -9,6 +9,7 @@ function Social(props) {
     switch(icon) {
         case "twitter": link = `https://twitter.com/${props.handle}`; break;
         case "linkedin": link = `https://linkedin.com/in/${props.handle}`; break;
+        default: link = "";
     }
     return (
         <Button color={icon} as="a" href={link} target="_blank">
