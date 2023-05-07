@@ -1,15 +1,13 @@
 import { useState } from "react";
+import { Container, Tab } from "semantic-ui-react";
 
-import { Container, Tab } from 'semantic-ui-react';
-
-import Introduction from './components/Introduction.js';
-import Experience from './components/Experience.js';
-import Work from './components/Work.js';
-import SiteFooter from './components/SiteFooter';
-import SiteHeader from './components/SiteHeader.js';
+import Introduction from "./components/Introduction.js";
+import Experience from "./components/Experience.js";
+import Work from "./components/Work.js";
+import SiteFooter from "./components/SiteFooter.js";
+import SiteHeader from "./components/SiteHeader.js";
 
 import "semantic-ui-css/semantic.min.css";
-
 
 function getLastActiveIndex() {
     let index = localStorage.getItem("activeIndex");
@@ -26,11 +24,11 @@ export default function App() {
 
     let panes = [
         {
-            menuItem: 'Experience',
+            menuItem: "Experience",
             render: () => <Experience />
         },
         {
-            menuItem: 'Work',
+            menuItem: "Work",
             render: () => <Work />
         }
     ]
