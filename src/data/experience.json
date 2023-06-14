@@ -1,5 +1,12 @@
 [
     {
+        "type": "work",
+        "organization": "Juniper Networks",
+        "role": "Security Engineering Intern",
+        "period": "May 2023 - Present",
+        "description": "..."
+    },
+    {
         "type": "education",
         "organization": "Georgia Institute of Technology",
         "role": "MS in Computer Science",

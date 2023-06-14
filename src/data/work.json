@@ -1,5 +1,19 @@
 [
     {
+        "title": "A visit to the web3.0 world",
+        "date": "May 2023",
+        "description": "Learn how to travel and stroll around a web application built in the web3 world!",
+        "url": "https://medium.com/coinmonks/a-visit-to-the-web3-0-world-3278e2716496",
+        "type": "blog"
+    },
+    {
+        "title": "What is a smart contract?",
+        "date": "May 2023",
+        "description": "Understand what a web3.0's smart contract is.",
+        "url": "https://coinsbench.com/what-is-a-smart-contract-6895da46c46a",
+        "type": "blog"
+    },
+    {
         "title": "Using GNS3 to learn SDN",
         "date": "May 2023",
         "description": "Setup and configure your GNS3 with required elements to learn, develop and test Software Defined Networks.",
