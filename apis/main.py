@@ -6,7 +6,7 @@ from deta import Deta
 app = Flask(__name__)
 CORS(
     app, 
-    origins=["http://localhost:3000", "https://*.kmmanoj.me"]
+    origins=["http://localhost:3000", "https://www.kmmanoj.me"]
 )
 
 @app.route('/v1/experience')
