@@ -1,9 +1,14 @@
-import { Container, Header } from "semantic-ui-react";
+import { Container, Header, Loader } from "semantic-ui-react";
 import { VerticalTimeline, VerticalTimelineElement }  from "react-vertical-timeline-component";
 import { MdWorkOutline, MdOutlineSchool } from "react-icons/md"
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 import "semantic-ui-css/semantic.min.css";
 import "react-vertical-timeline-component/style.min.css";
+
+import { API_HOST } from '../constants';
+
 
 function ExperienceItem(props) {
     let description = props.description;
@@ -31,14 +36,36 @@ function ExperienceItem(props) {
 }
 
 export default function Experience() {
-    let experiences = require("../data/experience.json");
+    let [loading, setLoading] = useState(true);
+    let [experiences, setExperiences] = useState([]);
+
+    function loadExperience() {
+        setLoading(true);
+        let url = `${API_HOST}/v1/experience`;
+        axios.get(url).then((response) => {
+            setLoading(false);
+            if(response.status !== 200) {
+                setExperiences(require("../data/experience.json"));
+            }
+            setExperiences(response.data);
+        }).catch(() => {
+            setLoading(false);
+            setExperiences(require("../data/experience.json"));
+        });
+    }
+
+    useEffect(() => loadExperience(), []);
+
     return (
         <div>
             <Container text textAlign="justified">
                 <Header as="h1">Experience</Header>
                 <a href="./CV.pdf">Download CV</a>
             </Container>
-            <VerticalTimeline lineColor="black" layout="1-column-left">
+            {
+                loading
+                ?<Loader active size="medium" inline style={{margin: "100px 0px"}}>Loading Experience</Loader>:
+                <VerticalTimeline lineColor="black" layout="1-column-left">
                 {
                     experiences.map(
                         (experience, i) => (
@@ -46,7 +73,8 @@ export default function Experience() {
                         )
                     )
                 }
-            </VerticalTimeline>
+                </VerticalTimeline>
+            }
         </div>
     );
 }

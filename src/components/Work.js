@@ -1,12 +1,16 @@
-import { Container, Header } from "semantic-ui-react";
+import { Container, Header, Loader } from "semantic-ui-react";
 import { VerticalTimeline, VerticalTimelineElement }  from "react-vertical-timeline-component";
 import { MdBrokenImage } from "react-icons/md";
 import { GiMaterialsScience } from "react-icons/gi";
 import { AiOutlineYoutube } from "react-icons/ai";
 import { TfiWrite } from "react-icons/tfi";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 import "semantic-ui-css/semantic.min.css";
 import "react-vertical-timeline-component/style.min.css";
+
+import { API_HOST } from '../constants';
 
 function WorkItem(props) {
     let icon = undefined;
@@ -36,22 +40,45 @@ function WorkItem(props) {
 }
 
 export default function Work() {
-    let works = require("../data/work.json");
+
+    let [loading, setLoading] = useState(true);
+    let [work, setWork] = useState([]);
+
+    function loadWork() {
+        setLoading(true);
+        let url = `${API_HOST}/v1/work`;
+        axios.get(url).then((response) => {
+            setLoading(false);
+            if(response.status !== 200) {
+                setWork(require("../data/work.json"));
+            }
+            setWork(response.data);
+        }).catch(() => {
+            setLoading(false);
+            setWork(require("../data/work.json"));
+        });
+    }
+
+    useEffect(() => loadWork(), []);
     return (
         <div>
             <Container text textAlign="justified">
                 <Header as="h1">Featured Work</Header>
                 <a href="https://blog.kmmanoj.me">All work</a>
             </Container>
-            <VerticalTimeline lineColor="black" layout="1-column-left">
-                {
-                    works.map(
-                        (work, i) => (
-                            <WorkItem key={i} {...work} />
+            {
+                loading
+                ?<Loader active size="medium" inline style={{margin: "100px 0px"}}>Loading Work</Loader>:
+                <VerticalTimeline lineColor="black" layout="1-column-left">
+                    {
+                        work.map(
+                            (work, i) => (
+                                <WorkItem key={i} {...work} />
+                            )
                         )
-                    )
-                }
-            </VerticalTimeline>
+                    }
+                </VerticalTimeline>
+            }
         </div>
     );
 }

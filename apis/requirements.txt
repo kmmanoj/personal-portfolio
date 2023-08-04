@@ -1,0 +1,4 @@
+flask
+gunicorn
+deta
+flask-cors

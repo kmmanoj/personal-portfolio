@@ -18,7 +18,10 @@ export default function Introduction() {
     let web3curiosityMsg = (
         <Message attached='bottom' info>
             <Icon name='info' />
-            Curious how <u><a href="https://web3.kmmanoj.me">my portfolio in web3</a></u> feels like?
+            Curious how my portfolio in web3 feels like?
+            <Button color="blue" size="mini" style={{margin: "0px 10px", padding: "5px"}} onClick={() => {
+                window.location.href = "https://web3.kmmanoj.me"
+            }}>Yes, Take me there!</Button>
             <Button color="red" size="mini" style={{margin: "0px 10px", padding: "5px"}}onClick={() => {
                 setWeb3curiosity(false);
                 setLastWeb3curiosity();
