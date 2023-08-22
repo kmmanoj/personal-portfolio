@@ -33,7 +33,7 @@ function WorkItem(props) {
 
             <p style={{margin:"10px"}}>
                 {props.description} <br/>
-                <a href={props.url}>Read more</a>
+                <a href={props.url} target="_blank" rel="noreferrer">Read more</a>
             </p>
         </VerticalTimelineElement>
     )
@@ -64,7 +64,7 @@ export default function Work() {
         <div>
             <Container text textAlign="justified">
                 <Header as="h1">Featured Work</Header>
-                <a href="https://blog.kmmanoj.me">All work</a>
+                <a href="https://kmmanoj.medium.com" target="_blank" rel="noreferrer">All work</a>
             </Container>
             {
                 loading

@@ -38,7 +38,7 @@
         "title": "Man-in-the-middle: A tale of a hoax DHCP server",
         "date": "Dec 2021",
         "description": "Learn how a user can act like a hoax DHCP server and situate himself as a man in the middle, and how one can prevent such attacks",
-        "url": "https://blog.kmmanoj.me/man-in-the-middle-a-tale-of-a-hoax-dhcp-server-c3d26f51b308",
+        "url": "https://kmmanoj.medium.com/man-in-the-middle-a-tale-of-a-hoax-dhcp-server-c3d26f51b308",
         "type": "blog"
     },
     {
@@ -59,7 +59,7 @@
         "title": "How I do Machine Learning at work",
         "date": "Mar 2021",
         "description": "A method used among group of data scientists to identify and refine feature set for a machine learning problem",
-        "url": "https://blog.kmmanoj.me/how-i-do-machine-learning-at-work-736a107a264f",
+        "url": "https://kmmanoj.medium.com/how-i-do-machine-learning-at-work-736a107a264f",
         "type": "blog"
     },
     {
@@ -87,7 +87,7 @@
         "title": "ARP Spoofing using Scapy",
         "date": "Aug 2020",
         "description": "Learn and try out ARP spoofing all by yourself in a Docker network using Scapy!",
-        "url": "https://blog.kmmanoj.me/arp-spoofing-using-scapy-92a330cce64b",
+        "url": "https://kmmanoj.medium.com/arp-spoofing-using-scapy-92a330cce64b",
         "type": "blog"
     },
     {

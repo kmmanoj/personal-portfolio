@@ -20,7 +20,7 @@ export default function Introduction() {
             <Icon name='info' />
             Curious how my portfolio in web3 feels like?
             <Button color="blue" size="mini" style={{margin: "0px 10px", padding: "5px"}} onClick={() => {
-                window.location.href = "https://web3.kmmanoj.me"
+                window.location.href = "https://web3.kmmanoj.com"
             }}>Yes, Take me there!</Button>
             <Button color="red" size="mini" style={{margin: "0px 10px", padding: "5px"}}onClick={() => {
                 setWeb3curiosity(false);
@@ -37,7 +37,7 @@ export default function Introduction() {
                     Manoj Vignesh K M, a cybersecurity researcher with a provable experience in network security and web application security. I also possess immense experience in building monitoring, alerting and inventory management system for a heterogenous system of network devices.
                 </p>
                 <p>
-                    Check out my <a href="https://blog.kmmanoj.me" target="_blank" rel="noreferrer">blog articles</a> where I explain claims and concepts by application.
+                    Check out my <a href="https://kmmanoj.medium.com" target="_blank" rel="noreferrer">blog articles</a> where I explain claims and concepts by application.
                 </p>
                 {web3curiosity?web3curiosityMsg:<div></div>}
             </Container>
