@@ -1,100 +1,106 @@
 [
     {
-        "title": "A visit to the web3.0 world",
-        "date": "May 2023",
-        "description": "Learn how to travel and stroll around a web application built in the web3 world!",
-        "url": "https://medium.com/coinmonks/a-visit-to-the-web3-0-world-3278e2716496",
-        "type": "blog"
+          "date": "May 2023",
+          "description": "Learn how to travel and stroll around a web application built in the web3 world!",
+          "key": "00014",
+          "title": "A visit to the web3.0 world",
+          "type": "blog",
+          "url": "https://kmmanoj.hashnode.dev/a-visit-to-the-web30-world"
     },
     {
-        "title": "What is a smart contract?",
-        "date": "May 2023",
-        "description": "Understand what a web3.0's smart contract is.",
-        "url": "https://coinsbench.com/what-is-a-smart-contract-6895da46c46a",
-        "type": "blog"
+          "date": "May 2023",
+          "description": "Understand what a web3.0's smart contract is.",
+          "key": "00013",
+          "title": "What is a smart contract?",
+          "type": "blog",
+          "url": "https://kmmanoj.hashnode.dev/what-is-a-smart-contract"
     },
     {
-        "title": "Using GNS3 to learn SDN",
-        "date": "May 2023",
-        "description": "Setup and configure your GNS3 with required elements to learn, develop and test Software Defined Networks.",
-        "url": "https://medium.com/@kmmanoj/what-can-go-wrong-in-a-cryptographic-system-4a60f47a2287",
-        "type": "blog"
+          "date": "Mar 2022",
+          "description": "Builds on the Authorization component of Identity and Access Management system from zero to how systems are implemented today",
+          "key": "00011",
+          "title": "How complex can authorization get?",
+          "type": "blog",
+          "url": "https://kmmanoj.hashnode.dev/how-complex-can-authorization-get"
     },
     {
-        "title": "How complex can authorization get?",
-        "date": "Mar 2022",
-        "description": "Builds on the Authorization component of Identity and Access Management system from zero to how systems are implemented today",
-        "url": "https://medium.com/better-practices/how-complex-can-authorization-get-5011c9dfb0fa",
-        "type": "blog"
+          "date": "Dec 2021",
+          "description": "Learn what is API security and how Postman can be used in automatic security testing of APIs",
+          "key": "00010",
+          "title": "Introduction to API Security",
+          "type": "video",
+          "url": "https://youtu.be/XlOEq9CBlr8"
     },
     {
-        "title": "Introduction to API Security",
-        "date": "Dec 2021",
-        "description": "Learn what is API security and how Postman can be used in automatic security testing of APIs",
-        "url": "https://youtu.be/XlOEq9CBlr8",
-        "type": "video"
+          "date": "Dec 2021",
+          "description": "Learn how a user can act like a hoax DHCP server and situate himself as a man in the middle, and how one can prevent such attacks",
+          "key": "00009",
+          "title": "Man-in-the-middle: A tale of a hoax DHCP server",
+          "type": "blog",
+          "url": "https://kmmanoj.hashnode.dev/man-in-the-middle-a-tale-of-a-hoax-dhcp-server-1"
     },
     {
-        "title": "Man-in-the-middle: A tale of a hoax DHCP server",
-        "date": "Dec 2021",
-        "description": "Learn how a user can act like a hoax DHCP server and situate himself as a man in the middle, and how one can prevent such attacks",
-        "url": "https://kmmanoj.medium.com/man-in-the-middle-a-tale-of-a-hoax-dhcp-server-c3d26f51b308",
-        "type": "blog"
+          "date": "Sep 2021",
+          "description": "Learn API security testing in action using Postman",
+          "key": "00008",
+          "title": "How Secure are your APIs?",
+          "type": "video",
+          "url": "https://www.youtube.com/watch?v=shT-Obfo-uk"
     },
     {
-        "title": "How Secure are your APIs?",
-        "date": "Sep 2021",
-        "description": "Learn API security testing in action using Postman",
-        "url": "https://www.youtube.com/watch?v=shT-Obfo-uk",
-        "type": "video"
+          "date": "May 2021",
+          "description": "Mathematically modelling human instinctive trust among systems to communicate security based trust reduction and redemption message",
+          "key": "00007",
+          "title": "Modelling Trust Frameworks for Network-IDS",
+          "type": "research",
+          "url": "https://doi.org/10.1109/INCET51464.2021.9456381"
     },
     {
-        "title": "Modelling Trust Frameworks for Network-IDS",
-        "date": "May 2021",
-        "description": "Mathematically modelling human instinctive trust among systems to communicate security based trust reduction and redemption message",
-        "url": "https://doi.org/10.1109/INCET51464.2021.9456381",
-        "type": "research"
+          "date": "Mar 2021",
+          "description": "A method used among group of data scientists to identify and refine feature set for a machine learning problem",
+          "key": "00006",
+          "title": "How I do Machine Learning at work",
+          "type": "blog",
+          "url": "https://kmmanoj.hashnode.dev/how-i-do-machine-learning-at-work"
     },
     {
-        "title": "How I do Machine Learning at work",
-        "date": "Mar 2021",
-        "description": "A method used among group of data scientists to identify and refine feature set for a machine learning problem",
-        "url": "https://kmmanoj.medium.com/how-i-do-machine-learning-at-work-736a107a264f",
-        "type": "blog"
+          "date": "Dec 2020",
+          "description": "Efficiently identifying and patching malicious software using merkle trees before the first execution by the user",
+          "key": "00005",
+          "title": "Tamper Detection and Correction of ELF Binaries by Remote Parties via via Merkle Trees",
+          "type": "research",
+          "url": "https://doi.org/10.1007/978-3-030-66763-4_14"
     },
     {
-        "title": "Tamper Detection and Correction of ELF Binaries by Remote Parties via via Merkle Trees",
-        "date": "Dec 2020",
-        "description": "Efficiently identifying and patching malicious software using merkle trees before the first execution by the user",
-        "url": "https://doi.org/10.1007/978-3-030-66763-4_14",
-        "type": "research"
+          "date": "Aug 2020",
+          "description": "Most defense systems filter out repeated DHCP requests. What if you could perform DHCP starvation without sending a DCHP request?",
+          "key": "00004",
+          "title": "DHCP starvation attack without making any DHCP requests",
+          "type": "blog",
+          "url": "https://kmmanoj.hashnode.dev/dhcp-starvation-attack-without-making-any-dhcp-requests"
     },
     {
-        "title": "DHCP starvation attack without making any DHCP requests",
-        "date": "Aug 2020",
-        "description": "Most defense systems filter out repeated DHCP requests. What if you could perform DHCP starvation without sending a DCHP request?",
-        "url": "https://infosecwriteups.com/dhcp-starvation-attack-without-making-any-dhcp-requests-bef0022133c9",
-        "type": "blog"
+          "date": "Aug 2020",
+          "description": "Set up a penetration testing environment using docker containers in docker networks to learn various types of port forwarding techniques",
+          "key": "00003",
+          "title": "Gain access to an internal machine using Port forwarding: Penetration testing",
+          "type": "blog",
+          "url": "https://kmmanoj.hashnode.dev/gain-access-to-an-internal-machine-using-port-forwarding-penetration-testing"
     },
     {
-        "title": "Gain access to an internal machine using Port forwarding: Penetration testing",
-        "date": "Aug 2020",
-        "description": "Set up a penetration testing environment using docker containers in docker networks to learn various types of port forwarding techniques",
-        "url": "https://infosecwriteups.com/gain-access-to-an-internal-machine-using-port-forwarding-penetration-testing-518c0b6a4a0e",
-        "type": "blog"
+          "date": "Aug 2020",
+          "description": "Learn and try out ARP spoofing all by yourself in a Docker network using Scapy!",
+          "key": "00002",
+          "title": "ARP Spoofing using Scapy",
+          "type": "blog",
+          "url": "https://kmmanoj.hashnode.dev/arp-spoofing-using-scapy"
     },
     {
-        "title": "ARP Spoofing using Scapy",
-        "date": "Aug 2020",
-        "description": "Learn and try out ARP spoofing all by yourself in a Docker network using Scapy!",
-        "url": "https://kmmanoj.medium.com/arp-spoofing-using-scapy-92a330cce64b",
-        "type": "blog"
-    },
-    {
-        "title": "Math Behind Euclid's Theorem",
-        "date": "Apr 2020",
-        "description": "Wondered why Euclid's GCD theorem works?",
-        "url": "https://medium.com/swlh/math-behind-euclids-theorem-f8e43ae5e56e",
-        "type": "blog"
+          "date": "Apr 2020",
+          "description": "Wondered why Euclid's GCD theorem works?",
+          "key": "00001",
+          "title": "Math Behind Euclid's Theorem",
+          "type": "blog",
+          "url": "https://kmmanoj.hashnode.dev/math-behind-euclids-theorem"
     }
 ]

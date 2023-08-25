@@ -37,7 +37,7 @@ export default function Introduction() {
                     Manoj Vignesh K M, a cybersecurity researcher with a provable experience in network security and web application security. I also possess immense experience in building monitoring, alerting and inventory management system for a heterogenous system of network devices.
                 </p>
                 <p>
-                    Check out my <a href="https://kmmanoj.medium.com" target="_blank" rel="noreferrer">blog articles</a> where I explain claims and concepts by application.
+                    Check out my <a href="https://kmmanoj.hashnode.dev" target="_blank" rel="noreferrer">blog articles</a> where I explain claims and concepts by application.
                 </p>
                 {web3curiosity?web3curiosityMsg:<div></div>}
             </Container>
