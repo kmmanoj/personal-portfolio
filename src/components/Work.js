@@ -64,7 +64,7 @@ export default function Work() {
         <div>
             <Container text textAlign="justified">
                 <Header as="h1">Featured Work</Header>
-                <a href="https://kmmanoj.medium.com" target="_blank" rel="noreferrer">All work</a>
+                <a href="https://kmmanoj.hashnode.dev" target="_blank" rel="noreferrer">All work</a>
             </Container>
             {
                 loading
